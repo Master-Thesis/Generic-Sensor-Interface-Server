@@ -11,7 +11,8 @@ const QList<QString> UDPServer::COMMANDS  =  QList<QString>()
                                              << "dsdvc"
                                              << "lsbts"
                                              << "kmap"
-                                             << "umap";
+                                             << "umap"
+                                             << "supdvs";
 
 UDPServer::UDPServer(bool useLocalHost, QObject *parent) :
     NodeSocket(useLocalHost, parent)
@@ -91,6 +92,10 @@ void UDPServer::handleDataRequest(QString data)
     case 6: // Undo keymap command (umap)
         qDebug() << "Undo keymap command called";
         unmapKey(cmd);
+        break;
+    case 7: // Supported devices command (supdvs)
+        qDebug() << "Supported devices command called";
+        supportedDevices(cmd);
         break;
     default:
         qDebug() << "Command not recognised";
@@ -198,3 +203,22 @@ void UDPServer::unmapKey(const QString cmd)
 
     sendDatagram(msg.toLatin1());
 }
+
+void UDPServer::supportedDevices(const QString cmd)
+{
+    QString msg = "10;";
+    QString cmdStr;
+
+    QStringList cmdList;
+    cmdList = cmd.split(' ');
+    cmdList.removeFirst();
+
+    for(int i = 0; i < cmdList.size(); i++)
+    {
+        cmdList[i].data()[0].toLower();
+        cmdStr.data()->
+    }
+
+    sendDatagram(msg.toLatin1());
+}
+

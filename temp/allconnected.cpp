@@ -101,11 +101,13 @@ void AllConnected::ListAllInfo()
                  {
                      newDevice.setType("HID");
                  }
-                 connected.append(newDevice);
+
+                 if(!connected.contains(newDevice))
+                    connected.append(newDevice);
                 // std::cout << "added" << std::endl;
 
              }
-}
+        }
 
           free(pRawInputDeviceList);
 

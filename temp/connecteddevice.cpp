@@ -5,6 +5,17 @@ connectedDevice::connectedDevice()
     //ListAllInfo();
 }
 
+bool connectedDevice::operator ==(const connectedDevice & cd)
+{
+    if(getName() == cd.getName() &&
+       getProductID() == cd.getProductID() &&
+       getType() == cd.getType() &&
+       getVendorID() == cd.getVendorID())
+        return true;
+    else
+        return false;
+}
+
 void connectedDevice::printConnectedDevice(){
     std::cout << "Name:\t" << name.toStdString() << std::endl;
     std::cout << "Type:\t" << type.toStdString() << std::endl;

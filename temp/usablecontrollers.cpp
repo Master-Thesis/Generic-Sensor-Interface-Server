@@ -28,12 +28,12 @@ void UsableControllers::init()
         while(j<size2){
             int vendorID2 = supported.getAllControllersList()[j].getVendorID();
             int productID2 = supported.getAllControllersList()[j].getProductID();
-            qDebug() << "------COMP-----";
-            qDebug() << "vid1: " << QString::number(vendorID,16);
-            qDebug() << "vid2: " << QString::number(vendorID2,16);
-            qDebug() << "pid1: " << QString::number(productID,16);
-            qDebug() << "pid1: " << QString::number(productID2,16);
-            qDebug() << "///////////////";
+//            qDebug() << "------COMP-----";
+//            qDebug() << "vid1: " << QString::number(vendorID,16);
+//            qDebug() << "vid2: " << QString::number(vendorID2,16);
+//            qDebug() << "pid1: " << QString::number(productID,16);
+//            qDebug() << "pid1: " << QString::number(productID2,16);
+//            qDebug() << "///////////////";
             if(vendorID == vendorID2 && productID == productID2){
                 usableControllers.append(supported.getAllControllersList()[j]);
             }

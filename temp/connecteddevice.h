@@ -9,11 +9,13 @@ class connectedDevice
 public:
     connectedDevice();
 
+    bool operator==(const connectedDevice & cd);
+
     //Getters
-    QString getName() {return name;}
-    QString getType() {return type;}
-    int getVendorID() {return vendorID;}
-    int getProductID() {return productID;}
+    QString getName() const {return name;}
+    QString getType() const {return type;}
+    int getVendorID() const {return vendorID;}
+    int getProductID() const {return productID;}
 
     //Setters
     void setName(QString newName) {name = newName;}

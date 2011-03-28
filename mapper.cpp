@@ -78,11 +78,15 @@ bool Mapper::tryDeviceSelect(const int deviceNo)
         return status;
     }
 
-    // TODO: fill buttons list with button names from selected device
     int buttonSize = UsableControllers::getList()[controllerNo].getButtonList().size();
-    //buttonList.reserve(buttonSize);
     for(int i = 0; i <  buttonSize; i++)
         buttonList << UsableControllers::getList()[controllerNo].getButtonList()[i].getName().toLower();
+
+    int xySize = UsableControllers::getList()[controllerNo].getNumberOfXY();
+    for(int i = 0; i < xySize; i++)
+        buttonList << ("up" + QString::number(i)) << ("down" + QString::number(i)) << ("left" + QString::number(i)) << ("right" + QString::number(i));
+
+    //buttonList.reserve(buttonSize + (xySize * 4));
     Mapper::instance()->initQStringList(mappingList, buttonList.size());
 
     return status;
