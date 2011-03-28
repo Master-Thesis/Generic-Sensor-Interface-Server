@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTROLLER>
+    <Description>Nintendo RVL-CNT-01</Description>
+    <VendorID>0x057e</VendorID>
+    <ProductID>0x0306</ProductID>
+    <Protocol>Bluetooth L2CAP</Protocol>
+    <SampleRate>nog</SampleRate>
+    <Parameters>
+        <Sensor_XY>
+            <Number_of_XY>1</Number_of_XY>
+		<XY_1>
+                <Format_XY> </Format_XY>
+                <Range_startvalue> </Range_startvalue>
+                <Range_stopvalue> </Range_stopvalue>
+            </XY_1>
+	  </Sensor_XY>
+	  <Sensor_Button>
+            <Format_button>hex</Format_button>
+            <Bytes_button>2</Bytes_button>
+            <Number_of_Buttons>11</Number_of_Buttons>
+		<Button1>
+                <Name>2</Name>
+                <Bitmask>0x0001</Bitmask>
+            </Button1>
+            <Button2>
+                <Name>1</Name>
+                <Bitmask>0x0002</Bitmask>
+            </Button2>
+            <Button3>
+                <Name>B</Name>
+                <Bitmask>0x0004</Bitmask>
+            </Button3>
+            <Button4>
+                <Name>A</Name>
+                <Bitmask>0x0008</Bitmask>
+            </Button4>
+            <Button5>
+                <Name>Minus</Name>
+                <Bitmask>0x0010</Bitmask>
+            </Button5>
+            <Button6>
+                <Name>Home</Name>
+                <Bitmask>0x0080</Bitmask>
+            </Button6>
+            <Button7>
+                <Name>Left</Name>
+                <Bitmask>0x0100</Bitmask>
+            </Button7>
+            <Button8>
+                <Name>Right</Name>
+                <Bitmask>0x0200</Bitmask>
+            </Button8>
+            <Button9>
+                <Name>Down</Name>
+                <Bitmask>0x0400</Bitmask>
+            </Button9>
+            <Button10>
+                <Name>Up</Name>
+                <Bitmask>0x0800</Bitmask>
+            </Button10>
+            <Button11>
+                <Name>Plus</Name>
+                <Bitmask>0x1000</Bitmask>
+            </Button11>
+        </Sensor_Button>
+    </Parameters>
+</CONTROLLER>
+
+
+

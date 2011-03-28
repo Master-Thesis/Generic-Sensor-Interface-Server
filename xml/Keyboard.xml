@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTROLLER>
+    <Description>Keyboard</Description>
+    <Type>Keyboard</Type>
+    <VendorID>0x0a81</VendorID>
+    <ProductID>0x0101</ProductID>
+    <Protocol>0</Protocol>
+    <SampleRate>0</SampleRate>
+    <Parameters>
+        <Sensor_XY>
+            <Number_of_XY>1</Number_of_XY>
+			<XY_1>
+                <Format_XY>hex</Format_XY>
+                <Bytes_XY>1</Bytes_XY>
+                
+                <!-- If true: no range, but fixed values // If false: range -->
+                <Fixed>true</Fixed>
+                <Number_of_Buttons>4</Number_of_Buttons>  
+				<UP>0x26</UP> 
+				<DOWN>0x28</DOWN> 
+				<LEFT>0x25</LEFT> 
+				<RIGHT>0x27</RIGHT> 
+
+            </XY_1>
+	  </Sensor_XY>
+	  <Sensor_Button>
+            
+            <Format_button>hex</Format_button>
+            <Bytes_button>4</Bytes_button>
+           
+			<!-- If true: general code for press and release (used by keyboard) -->
+			<General_Flag_Button_pressed>false</General_Flag_Button_pressed>
+			<Format_flag>0</Format_flag>
+			<Bytes_flag>0</Bytes_flag>
+			<Press_flag_value>0</Press_flag_value>
+
+            <!-- If true: each button have a seperate code for press and release -->
+			<Flag_Button_pressed>true</Flag_Button_pressed>		
+			<Number_of_Buttons>3</Number_of_Buttons>
+			
+			<Button1>
+                <Name>Spacebar</Name>
+                <Press>0x0020</Press>
+                <Release>0x0000</Release>
+            </Button1>
+            
+            <Button2>
+                <Name>Enter</Name>
+                <Press>0x000d</Press>
+                <Release>0x0000</Release>
+            </Button2>
+            
+        </Sensor_Button>
+    </Parameters>
+</CONTROLLER>
+
+
+

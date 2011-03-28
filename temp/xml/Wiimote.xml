@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTROLLER>
+    <Description>Nintendo RVL-CNT-01</Description>
+    <Type>HID</Type>
+    <VendorID>0x057e</VendorID>
+    <ProductID>0x0306</ProductID>
+    <Protocol>0</Protocol>
+    <SampleRate>0</SampleRate>
+    <Parameters>
+        <Sensor_XY>
+            <Number_of_XY>1</Number_of_XY>
+			<XY_1>
+                <Format_XY>hex</Format_XY>
+                <Bytes_XY>3</Bytes_XY>
+                <General_Mask_XY>0x000f00</General_Mask_XY>
+                
+                <!-- If true: no range, but fixed values // If false: range -->
+                <Fixed>true</Fixed>
+                <Number_of_Buttons>4</Number_of_Buttons>                	
+				<UP>0x000800</UP> 
+				<DOWN>0x000400</DOWN> 
+				<LEFT>0x000100</LEFT> 
+				<RIGHT>0x000200</RIGHT> 
+								
+			
+            </XY_1>
+     </Sensor_XY>
+	  
+	  
+	  <Sensor_Button>
+            
+            <Format_button>hex</Format_button>
+            <Bytes_button>4</Bytes_button>
+            <General_Mask>0xfff000</General_Mask>             
+           
+			<!-- If true: general code for press and release (used by keyboard) -->
+			<General_Flag_Button_pressed>false</General_Flag_Button_pressed>
+			<Format_flag>0</Format_flag>
+			<Bytes_flag>0</Bytes_flag>
+			<Press_flag_value>0</Press_flag_value>
+
+            <!-- If true: each button have a seperate code for press and release -->
+			<Flag_Button_pressed>true</Flag_Button_pressed>		
+			<Number_of_Buttons>7</Number_of_Buttons>	
+			<Button1>
+                <Name>Minus</Name>
+                <Press>0x100000</Press>
+                <Release>0</Release>
+            </Button1>
+            
+            <Button2>
+                <Name>Plus</Name>
+                <Press>0x001000</Press>
+                <Release>0</Release>
+            </Button2>
+            
+            <Button3>
+                <Name>Home</Name>
+                <Press>0x800000</Press>
+                <Release>0</Release>
+            </Button3>
+            <Button4>
+                <Name>A</Name>
+                <Press>0x080000</Press>
+                <Release>0</Release>
+            </Button4>
+            <Button5>
+                <Name>B</Name>
+                <Press>0x040000</Press>
+                <Release>0</Release>
+            </Button5>  
+            <Button6>
+                <Name>1</Name>
+                <Press>0x020000</Press>
+                <Release>0</Release>
+            </Button6>  
+            <Button7>
+            	<Name>2</Name>
+                <Press>0x010000</Press>
+                <Release>0</Release>
+            </Button7> 
+        </Sensor_Button>
+        
+        
+        <Sensor_Scroll>
+            <Number_of_Scroll>0</Number_of_Scroll>        	
+        	<Format_Scroll>0</Format_Scroll>
+            <Bytes_Scroll>0</Bytes_Scroll>
+         
+        </Sensor_Scroll>  
+		      
+    </Parameters>
+</CONTROLLER>
+
+
+

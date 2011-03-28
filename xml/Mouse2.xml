@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTROLLER>
+    <Description>Mouse</Description>
+    <Type>Mouse</Type>
+    <VendorID>0x046d</VendorID>
+    <ProductID>0xc05a</ProductID>
+    <Protocol>0</Protocol>
+    <SampleRate>0</SampleRate>
+    <Parameters>
+        <Sensor_XY>
+            <Number_of_XY>1</Number_of_XY>
+			<XY_1>
+                <Format_XY>hex</Format_XY>
+                <Bytes_XY>4</Bytes_XY>
+                
+                <!-- If true: no range, but fixed values // If false: range -->
+                <Fixed>true</Fixed>
+                <Number_of_Buttons>0</Number_of_Buttons>                	
+				<UP>0</UP> 
+				<DOWN>0</DOWN> 
+				<LEFT>0</LEFT> 
+				<RIGHT>0</RIGHT> 
+			
+			
+            </XY_1>
+     </Sensor_XY>
+	  
+	  
+	  <Sensor_Button>
+           
+            <Format_button>hex</Format_button>
+            <Bytes_button>2</Bytes_button>
+           
+			<!-- If true: general code for press and release (used by keyboard) -->
+			<General_Flag_Button_pressed>false</General_Flag_Button_pressed>
+			<Format_flag>0</Format_flag>
+			<Bytes_flag>0</Bytes_flag>
+			<Press_flag_value>0</Press_flag_value>
+
+            <!-- If true: each button have a seperate code for press and release -->
+			<Flag_Button_pressed>true</Flag_Button_pressed>	
+			<Number_of_Buttons>5</Number_of_Buttons> 		
+			<Button1>
+                <Name>LeftButton</Name>
+                <Press>0x0001</Press>
+                <Release>0x0002</Release>
+            </Button1>
+            
+            <Button2>
+                <Name>RightButton</Name>
+                <Press>0x0004</Press>
+                <Release>0x0008</Release>
+            </Button2>
+            
+            <Button3>
+                <Name>Scroll</Name>
+                <Press>0x0010</Press>
+                <Release>0x0020</Release>
+            </Button3>
+            <Button4>
+                <Name>Left1</Name>
+                <Press>0x0040</Press>
+                <Release>0x0080</Release>
+            </Button4>
+            <Button5>
+                <Name>Left2</Name>
+                <Press>0x0100</Press>
+                <Release>0x0200</Release>
+            </Button5>  
+        </Sensor_Button>
+        
+        
+        <Sensor_Scroll>
+            <Number_of_Scroll>1</Number_of_Scroll>        	
+        	<Format_Scroll>hex</Format_Scroll>
+            <Bytes_Scroll>2</Bytes_Scroll>
+         
+            <Scroll_1>
+	            <Up>0078</Up>
+           		<Down>ff88</Down>
+            </Scroll_1> 
+        </Sensor_Scroll>  
+		      
+    </Parameters>
+</CONTROLLER>
+
+
+

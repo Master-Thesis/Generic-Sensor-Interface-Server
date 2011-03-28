@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTROLLER>
+    <Description>Sidewinder Gamepad</Description>
+    <Type>HID</Type>
+    <VendorID>0x045e</VendorID>
+    <ProductID>0x0007</ProductID>
+    <Protocol>0</Protocol>
+    <SampleRate>0</SampleRate>
+    <Parameters>
+        <Sensor_XY>
+            <Number_of_XY>1</Number_of_XY>
+			<XY_1>
+                <Format_XY>hex</Format_XY>
+                <Bytes_XY>4</Bytes_XY>
+                <General_Mask_XY>0x7fff00</General_Mask_XY>                
+                
+                <!-- If true: no range, but fixed values // If false: range -->
+                <Fixed>true</Fixed>
+                <Number_of_Buttons>8</Number_of_Buttons>                	
+				<UP>0x00003f00</UP> 
+				<DOWN>0x007f3f00</DOWN> 
+				<LEFT>0x003f0000</LEFT> 
+				<RIGHT>0x003f7f00</RIGHT> 
+				
+				<!-- If 8 Buttons: -->				
+				<UP_LEFT>0x00000000</UP_LEFT> 
+				<DOWN_LEFT>0x007f0000</DOWN_LEFT> 
+				<UP_RIGHT>0x00007f00</UP_RIGHT> 
+				<DOWN_RIGHT>0x007f7f00</DOWN_RIGHT> 
+            </XY_1>
+     </Sensor_XY>
+	  
+	  
+	  <Sensor_Button>
+                       
+            <Format_button>hex</Format_button>
+            <Bytes_button>4</Bytes_button>
+            <General_Mask>0xffc00000</General_Mask>             
+           
+			<!-- If true: general code for press and release (used by keyboard) -->
+			<General_Flag_Button_pressed>false</General_Flag_Button_pressed>
+			<Format_flag>0</Format_flag>
+			<Bytes_flag>0</Bytes_flag>
+			<Press_flag_value>0</Press_flag_value>
+
+            <!-- If true: each button have a seperate code for press and release -->
+			<Flag_Button_pressed>true</Flag_Button_pressed>	
+			<Number_of_Buttons>8</Number_of_Buttons> 		
+			<Button1>
+                <Name>A</Name>
+                <Press>0x01000000</Press>
+                <Release>0</Release>
+            </Button1>
+            
+            <Button2>
+                <Name>B</Name>
+                <Press>0x02000000</Press>
+                <Release>0</Release>
+            </Button2>
+            
+            <Button3>
+                <Name>C</Name>
+                <Press>0x04000000</Press>
+                <Release>0</Release>
+            </Button3>
+            <Button4>
+                <Name>X</Name>
+                <Press>0x08000000</Press>
+                <Release>0</Release>
+            </Button4>
+            <Button5>
+                <Name>Y</Name>
+                <Press>0x10000000</Press>
+                <Release>0</Release>
+            </Button5>  
+            <Button6>
+                <Name>Z</Name>
+                <Press>0x20000000</Press>
+                <Release>0</Release>
+            </Button6>  
+            <Button7>
+            	<Name>L1</Name>
+                <Press>0x40000000</Press>
+                <Release>0</Release>
+            </Button7> 
+            <Button8>
+                <Name>R1</Name>
+                <Press>0x80000000</Press>
+                <Release>0</Release>
+            </Button8>                           
+        </Sensor_Button>
+        
+        
+        <Sensor_Scroll>
+            <Number_of_Scroll>0</Number_of_Scroll>        	
+        	<Format_Scroll>0</Format_Scroll>
+            <Bytes_Scroll>0</Bytes_Scroll>
+         
+        </Sensor_Scroll>  
+		      
+    </Parameters>
+</CONTROLLER>
+
+
+

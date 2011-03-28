@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTROLLER>
+    <Description>Mouse</Description>
+    <VendorID>0</VendorID>
+    <ProductID>0</ProductID>
+    <Protocol> </Protocol>
+    <SampleRate>nog</SampleRate>
+    <Parameters>
+        <Sensor_XY>
+            <Number_of_XY>1</Number_of_XY>
+		<XY_1>
+                <Format_XY> </Format_XY>
+                <Range_startvalue> </Range_startvalue>
+                <Range_stopvalue> </Range_stopvalue>
+		<UP>4</UP> 
+		<DOWN>5</DOWN> 
+		<LEFT>2</LEFT> 
+		<RIGHT>1</RIGHT> 
+            </XY_1>
+	  </Sensor_XY>
+	  <Sensor_Button>
+            <Format_button>hex</Format_button>
+            <Bytes_button>2</Bytes_button>
+            <Number_of_Buttons>2</Number_of_Buttons>
+		<Button1>
+                <Name>LeftButton</Name>
+                <Bitmask>0x0001</Bitmask>
+            </Button1>
+            <Button2>
+                <Name>RightButton</Name>
+                <Bitmask>0x0002</Bitmask>
+            </Button2>
+        </Sensor_Button>
+    </Parameters>
+</CONTROLLER>
+
+
+

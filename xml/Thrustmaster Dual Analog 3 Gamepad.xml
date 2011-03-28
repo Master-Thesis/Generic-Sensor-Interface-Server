@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONTROLLER>
+    <Description>Thrustmaster Dual Analog 3 Gamepad</Description>
+    <Type>HID</Type>
+    <VendorID>0x044f</VendorID>
+    <ProductID>0xb315</ProductID>
+    <Protocol>0</Protocol>
+    <SampleRate>0</SampleRate>
+    <Parameters>
+        <Sensor_XY>
+            <Number_of_XY>1</Number_of_XY>
+			<XY_1>
+                <Format_XY>hex</Format_XY>
+                <Bytes_XY>4</Bytes_XY>
+                <General_Mask_XY>0xf0000000</General_Mask_XY>                
+                
+                <!-- If true: no range, but fixed values // If false: range -->
+                <Fixed>true</Fixed>
+                <Number_of_Buttons>8</Number_of_Buttons>                	
+				<UP>0x0</UP> 
+				<DOWN>0x40000000</DOWN> 
+				<LEFT>0x60000000</LEFT> 
+				<RIGHT>0x20000000</RIGHT> 
+				
+				<!-- If 8 Buttons: -->				
+				<UP_LEFT>0x70000000</UP_LEFT> 
+				<DOWN_LEFT>0x50000000</DOWN_LEFT> 
+				<UP_RIGHT>0x10000000</UP_RIGHT> 
+				<DOWN_RIGHT>0x30000000</DOWN_RIGHT> 
+				
+				
+			
+            </XY_1>
+     </Sensor_XY>
+	  
+	  
+	  <Sensor_Button>
+          
+            <Format_button>hex</Format_button>
+            <Bytes_button>4</Bytes_button>
+            <General_Mask>0x000fff00</General_Mask>            
+			<!-- If true: general code for press and release (used by keyboard) -->
+			<General_Flag_Button_pressed>false</General_Flag_Button_pressed>
+			<Format_flag>0</Format_flag>
+			<Bytes_flag>0</Bytes_flag>
+			<Press_flag_value>0</Press_flag_value>
+
+
+            <!-- If true: each button have a seperate code for press and release -->
+			<Flag_Button_pressed>true</Flag_Button_pressed>	
+            <Number_of_Buttons>8</Number_of_Buttons>  					
+			<Button1>
+                <Name>Cross</Name>
+                <Press>0x00000100</Press>
+                <Release>0</Release>
+            </Button1>
+            
+            <Button2>
+                <Name>Square</Name>
+                <Press>0x00000200</Press>
+                <Release>0</Release>
+            </Button2>
+            
+            <Button3>
+                <Name>Circle</Name>
+                <Press>0x00000400</Press>
+                <Release>0</Release>
+            </Button3>
+            <Button4>
+                <Name>Triangle</Name>
+                <Press>0x00000800</Press>
+                <Release>0</Release>
+            </Button4>
+            <Button5>
+                <Name>L1</Name>
+                <Press>0x00001000</Press>
+                <Release>0</Release>
+            </Button5>  
+            <Button6>
+                <Name>L2</Name>
+                <Press>0x00002000</Press>
+                <Release>0</Release>
+            </Button6>  
+            <Button7>
+            	<Name>R1</Name>
+                <Press>0x00004000</Press>
+                <Release>0</Release>
+            </Button7> 
+            <Button8>
+                <Name>R2</Name>
+                <Press>0x00008000</Press>
+                <Release>0</Release>
+            </Button8>   
+            <Button9>
+                <Name>L3</Name>
+                <Press>0x00010000</Press>
+                <Release>0</Release>
+            </Button9>   
+            <Button10>
+                <Name>R3</Name>
+                <Press>0x00020000</Press>
+                <Release>0</Release>
+            </Button10>
+            <Button11>
+                <Name>Joystick1</Name>
+                <Press>0x00040000</Press>
+                <Release>0</Release>
+            </Button11>  
+            <Button12>
+                <Name>Joystick2</Name>
+                <Press>0x00080000</Press>
+                <Release>0</Release>
+            </Button12>                                                                             
+        </Sensor_Button>
+        
+        
+        <Sensor_Scroll>
+            <Number_of_Scroll>0</Number_of_Scroll>        	
+        	<Format_Scroll>0</Format_Scroll>
+            <Bytes_Scroll>0</Bytes_Scroll>
+        </Sensor_Scroll>  
+		      
+    </Parameters>
+</CONTROLLER>
+
+
+
