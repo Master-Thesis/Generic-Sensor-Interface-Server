@@ -82,8 +82,6 @@ void Server::InitRawInput() {
 
 bool Server::winEvent(MSG *m, long *result)
 {
-    //printf("Winevent\n");
-    //m->lParam
 
 //    HandleDevice *thread = new HandleDevice(m, result, this);
 //    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));

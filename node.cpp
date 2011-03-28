@@ -52,13 +52,6 @@ void Node::setAddress(const QString &n_address)
     emit addressChanged(_address->toString());
 }
 
-//void Node::setAddress(QHostAddress &n_address)
-//{
-//    if(_address == n_address)
-//        return;
-//    _address = n_address;
-//}
-
 void Node::setPort(const int &n_port)
 {
     if(_port == n_port)
