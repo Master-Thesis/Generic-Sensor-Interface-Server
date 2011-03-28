@@ -2,7 +2,7 @@
 
 #include "listdevices.h"
 #include "mapper.h"
-#include "../nodesocket.h"
+#include "nodesocket.h"
 
 const QList<QString> UDPServer::COMMANDS  =  QList<QString>()
                                              << "help"

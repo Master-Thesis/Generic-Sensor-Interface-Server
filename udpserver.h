@@ -6,7 +6,7 @@
 
 #include "listdevices.h"
 #include "mapper.h"
-#include "../nodesocket.h"
+#include "nodesocket.h"
 
 class UDPServer : public NodeSocket
 {
