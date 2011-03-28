@@ -213,11 +213,11 @@ void UDPServer::supportedDevices(const QString cmd)
     cmdList = cmd.split(' ');
     cmdList.removeFirst();
 
-//    for(int i = 0; i < cmdList.size(); i++)
-//    {
-//        cmdList[i].data()[0].toLower();
-//        cmdStr.data()->
-//    }
+    for(int i = 0; i < cmdList.size(); i++)
+    {
+        cmdList[i].data()[0].toLower();
+        cmdStr.data()->
+    }
 
     sendDatagram(msg.toLatin1());
 }
