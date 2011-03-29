@@ -207,7 +207,9 @@ void UDPServer::unmapKey(const QString cmd)
 void UDPServer::supportedDevices(const QString cmd)
 {
     QString msg = "10;";
+    QMap<QString, int> map;
     QString cmdStr;
+    QString methodString;
 
     QStringList cmdList;
     cmdList = cmd.split(' ');
@@ -215,9 +217,27 @@ void UDPServer::supportedDevices(const QString cmd)
 
     for(int i = 0; i < cmdList.size(); i++)
     {
-        cmdList[i].data()[0].toLower();
-        cmdStr.data()->
+        int intPos = cmdList[i].size() - 1;
+        int number = cmdList[i].toLower().data()[intPos];
+        cmdStr.remove(intPos,1);
+
+        map[cmdStr] =  number;
     }
+
+    if (map.contains("b"))
+        methodString += "b " + map.value("b") + ",";
+    else
+        methodString += "b 0,";
+    if (map.contains("p"))
+        methodString += "p " + map.value("b") + ",";
+    else
+        methodString += "p 0,";
+    if (map.contains("v"))
+        methodString += "v " + map.value("b");
+    else
+        methodString += "v 0";
+
+    // TODO pass methodString to function
 
     sendDatagram(msg.toLatin1());
 }

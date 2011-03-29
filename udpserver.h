@@ -35,6 +35,7 @@ private:
     void listButtons();
     void mapKey(const QString cmd);
     void unmapKey(const QString cmd);
+    void supportedDevices(const QString cmd);
 
     Mapper *mapper;
     static const QList<QString> COMMANDS;
