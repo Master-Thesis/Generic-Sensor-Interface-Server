@@ -2,7 +2,7 @@
 #define USABLECONTROLLERS_H
 
 #include <QList>
-#include "allfiles.h"
+#include "supporteddevices.h"
 #include "connecteddevice.h"
 #include "allconnected.h"
 

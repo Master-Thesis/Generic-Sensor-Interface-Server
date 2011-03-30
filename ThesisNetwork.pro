@@ -25,14 +25,17 @@ SOURCES += main.cpp \
     temp/controller.cpp \
     temp/connecteddevice.cpp \
     temp/button.cpp \
-    temp/allfiles.cpp \
     temp/allconnected.cpp \
     temp/usablecontrollers.cpp \
     nodesocket.cpp \
     node.cpp \
     wiimote/wiimote.cpp \
     wiimote/run.cpp \
+<<<<<<< Updated upstream
     temp/axis.cpp
+=======
+    temp/supporteddevices.cpp
+>>>>>>> Stashed changes
 
 HEADERS += \
     udpserver.h \
@@ -45,7 +48,6 @@ HEADERS += \
     temp/controller.h \
     temp/connecteddevice.h \
     temp/button.h \
-    temp/allfiles.h \
     temp/allconnected.h \
     temp/usablecontrollers.h \
     nodesocket.h \
@@ -57,7 +59,11 @@ HEADERS += \
     wiimote/wiimote.h \
     wiimote/setupapi.h \
     wiimote/run.h \
+<<<<<<< Updated upstream
     temp/axis.h
+=======
+    temp/supporteddevices.h
+>>>>>>> Stashed changes
 
 #DEFINES += _WIN32_WINNT="0x0501"
 #DEFINES += _WIN32_WINDOWS="0x0501"
@@ -67,14 +73,14 @@ LIBS += libsetupapi \
     libuser32
 #INCLUDEPATH += "C:\\Qt\\2010.05\\mingw\\include" \
 
-LIBS +=  -luser32 -L"C:\\Qt\\2010.05\\mingw\\lib"
+LIBS +=  -luser32 -L"C:\\Dev\\Qt\\2010.05\\mingw\\lib"
 
-LIBS += "C:\Qt\2010.05\mingw\lib\libwinmm.a"
+LIBS += "C:\Dev\Qt\2010.05\mingw\lib\libwinmm.a"
 
-LIBS += "C:\Qt\2010.05\mingw\lib\libhid.a"
+LIBS += "C:\Dev\Qt\2010.05\mingw\lib\libhid.a"
 
-LIBS += "C:\Qt\2010.05\mingw\lib\libsetupapi.a"
+LIBS += "C:\Dev\Qt\2010.05\mingw\lib\libsetupapi.a"
 
-LIBS += "C:\Qt\2010.05\mingw\lib\libuser32.a"
+LIBS += "C:\Dev\Qt\2010.05\mingw\lib\libuser32.a"
 
-LIBS += "C:\WinDDK\7600.16385.1\lib\win7\i386\hid.lib"
+LIBS += "C:\Dev\WinDDK\7600.16385.1\lib\win7\i386\hid.lib"

@@ -242,7 +242,9 @@ void UDPServer::supportedDevices(const QString cmd)
     else
         methodString += "v 0";
 
-    // TODO pass methodString to function
+    qDebug() << "methodString: " << methodString;
+
+    msg += SupportedDevices::instance()->printDevicesWithString(methodString);
 
     sendDatagram(msg.toLatin1());
 }

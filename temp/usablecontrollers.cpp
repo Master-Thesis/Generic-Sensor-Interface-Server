@@ -11,13 +11,13 @@ void UsableControllers::init()
 {
     qDebug() << "UsableControllers::init() entered";
 
-    allFiles supported;
+    SupportedDevices supported;
     AllConnected connected;
 
     qDebug() << "UsableControllers::init() start comparison";
 
     int size = connected.getAllConnectedList().size();
-    int size2 = supported.getAllControllersList().size();
+    int size2 = SupportedDevices::instance()->getAllDevicesList().size();
     qDebug() << "connected size: " << size;
     qDebug() << "supported size: " << size2;
     int i = 0;

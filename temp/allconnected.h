@@ -19,7 +19,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <stdio.h>
-#include "allfiles.h"
+#include "supporteddevices.h"
 #include <QDebug>
 
 
