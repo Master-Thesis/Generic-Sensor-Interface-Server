@@ -70,3 +70,41 @@ int allFiles::findIndexWithVidPid(int vid, int pid){
     }
     return index;
 }
+
+QList<Controller> allFiles::findController(const int buttons, const int xy, const int vector){
+    QList<Controller> con;
+    int i = 0;
+    while(i<controllers.size()){
+        if((controllers[i].getNumberOfButtons() > buttons) && (controllers[i].getNumberOfXY() > xy)){
+            con.append(controllers[i]);
+        }
+        i++;
+    }
+    return con;
+
+}
+
+QList<Controller> allFiles::getControllerWithString(const QString description){
+
+    QStringList desList;
+    desList = description.toLower().split(',');
+    QStringList desList2;
+    int buttons;
+    int xy;
+    int vector;
+
+    int i = 0;
+    while(i<desList.size()){
+        desList2 = desList.at(i).split(' ');
+        if(desList2.at(0) == "b"){
+            buttons = desList2.at(1).toInt();
+        }
+        else if(desList2.at(0) == "p"){
+            xy = desList2.at(1).toInt();
+        }
+        i++;
+    }
+
+  return findController(buttons, xy, vector);
+
+}

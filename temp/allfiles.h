@@ -23,6 +23,8 @@ public:
     QString findNameWithVidPid(int vid, int pid);
     int findIndexWithVidPid(int vid, int pid);
     QList<Controller> getAllControllersList(){return controllers;}
+    QList<Controller> findController(const int buttons, const int xy, const int vector);
+    QList<Controller> getControllerWithString(const QString description);
 
 private:
     QList<Controller> controllers;
