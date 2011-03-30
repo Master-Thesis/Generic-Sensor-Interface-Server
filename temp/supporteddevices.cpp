@@ -132,7 +132,7 @@ QList<Controller> SupportedDevices::getDeviceWithString(const QString descriptio
         if(desList2.at(0) == "b"){
             buttons = desList2.at(1).toInt();
         }
-        else if(desList2.at(0) == "p"){
+        if(desList2.at(0) == "p"){
             xy = desList2.at(1).toInt();
         }
         i++;
