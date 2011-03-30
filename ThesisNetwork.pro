@@ -31,11 +31,8 @@ SOURCES += main.cpp \
     node.cpp \
     wiimote/wiimote.cpp \
     wiimote/run.cpp \
-<<<<<<< Updated upstream
     temp/axis.cpp
-=======
     temp/supporteddevices.cpp
->>>>>>> Stashed changes
 
 HEADERS += \
     udpserver.h \
@@ -59,11 +56,8 @@ HEADERS += \
     wiimote/wiimote.h \
     wiimote/setupapi.h \
     wiimote/run.h \
-<<<<<<< Updated upstream
     temp/axis.h
-=======
     temp/supporteddevices.h
->>>>>>> Stashed changes
 
 #DEFINES += _WIN32_WINNT="0x0501"
 #DEFINES += _WIN32_WINDOWS="0x0501"
