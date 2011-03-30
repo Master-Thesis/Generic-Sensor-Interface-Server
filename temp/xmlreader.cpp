@@ -180,6 +180,50 @@ void XMLReader::ReadController()
                                 Rxml.readNext();
                             }
                         }
+                        else if(Rxml.name() == "Number_of_Vectors")
+                        {
+                            qDebug() << "XYZ";
+                            //control.setNumberOfButtons(ReadTekstElement().toInt());
+                            control.setNumberOfVectors(ReadTekstElement().toInt());
+
+                            Rxml.readNext();
+                            int i = 0;
+                            while(i<control.getNumberOfVectors())
+                            {
+                                i++;
+
+                                QString name = "XYZ_"; // nog aanpassen
+                                QString text_integer;
+                                name += text_integer.setNum(i);
+                                if(Rxml.name() == name)
+                                {
+                                    v = ReadVector();
+                                }
+                                //control.addButton(temp);
+                                Rxml.readNext();
+                            }
+                        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         Rxml.readNext();
                 }
                 else
@@ -350,6 +394,69 @@ Button XMLReader::ReadButton()
     return button;
 }
 
+
+Vector XMLReader::ReadVector()
+{
+    qDebug() << "Read Vector";
+    //Button button;
+    Vector vector;
+    while(!Rxml.atEnd())
+        {
+                if(Rxml.isEndElement())
+                {
+                        Rxml.readNext();
+                        break;
+                }
+                else if(Rxml.isCharacters())
+                {
+                        Rxml.readNext();
+                }
+                else if(Rxml.isStartElement())
+                {
+                        if(Rxml.name() == "Format_XYZ")
+                        {
+                            vector.setFormatXYZ(ReadTekstElement());
+                            //button.setName(ReadTekstElement());
+                        }
+                        else if(Rxml.name() == "Bytes_XYZ")
+                        {
+                            //button.setBitMaskPressed(ConvertStringToHex(ReadTekstElement()));;
+                            vector.setNumberBytesXYZ(ReadTekstElement().toInt());
+                        }
+                        else if(Rxml.name() == "General_Mask_XYZ")
+                        {
+                            vector.setMaskXYZ(ConvertStringToHex(ReadTekstElement()));
+                        }
+                        else if(Rxml.name() == "X_AXIS")
+                        {
+                            qDebug() << "Read Axis X";
+                            Axis x = ReadAxis();
+                            vector.setAxisX(x);
+                        }
+                        else if(Rxml.name() == "Y_AXIS")
+                        {
+                            qDebug() << "Read Axis Y";
+                            Axis y = ReadAxis();
+                            vector.setAxisY(y);
+                        }
+                        else if(Rxml.name() == "Z_AXIS")
+                        {
+                            qDebug() << "Read Axis Z";
+                            Axis z = ReadAxis();
+                            vector.setAxisZ(z);
+                        }
+                        Rxml.readNext();
+                }
+                else
+                {
+                        Rxml.readNext();
+                }
+        }
+    control.addVector(vector);
+    return vector;
+}
+
+
 Axis XMLReader::ReadAxis()
 {
     qDebug() << "Read Axis";
@@ -426,11 +533,8 @@ return tekst;
 
 unsigned long long XMLReader::ConvertStringToHex(QString hexVal){
     unsigned long long i = 0;
-    //std::cout << "in: " << hexVal.toStdString() << " out: ";
     if ( hexVal.startsWith( "0x" ) ) i = hexVal.mid( 2 ).toULongLong(0 , 16);
-        //.toInt( 0, 16 );
     else if ( hexVal.startsWith( "0" ) ) i = hexVal.mid( 1 ).toULongLong( 0, 8 );
     else i = hexVal.toULongLong();
-    //std::cout << std::hex << i << std::endl;
     return i;
 }

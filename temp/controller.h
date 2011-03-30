@@ -7,6 +7,7 @@
 #include "sensorxy.h"
 #include <iostream>
 #include <QDebug>
+#include "vector.h"
 
 class Controller
 {
@@ -52,6 +53,14 @@ public:
         void setGeneralButtonMask(unsigned long long newGeneralButtonMask) {generalButtonMask = newGeneralButtonMask;}
         unsigned long long getGeneralButtonMask() {return generalButtonMask;}
 
+        // Setters XYZ Part
+        void setNumberOfVectors(int newNumberXYZ){numberOfXYZ = newNumberXYZ;}
+
+        // Getters XYZ Part
+        QList<Vector> getVectorList(){ return vectors;}
+        int getNumberOfVectors(){return numberOfXYZ;}
+
+
         // Getters XY Part
         int getNumberOfXY() {return numberOfXY;}
         QList<SensorXY> getSensorXYList(){return xySensors;}
@@ -69,6 +78,7 @@ public:
         void addButton(Button);
         QString findNameForButton(int buttonValue);
         void addXY(SensorXY);
+        void addVector(Vector newVector);
 
 
 private:
@@ -97,6 +107,11 @@ private:
         QList<SensorXY> xySensors;
         QString formatXYSensors;
         int numberOfBytesXYSensors;
+
+        //Info of all Vectors, XYZ sensors
+        int numberOfXYZ;
+        QList<Vector> vectors;
+
 
 
 

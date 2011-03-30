@@ -261,7 +261,10 @@ void HandleDevice::handleIt(RAWINPUT *raw)
             }
 
 }
+        qDebug() << UsableControllers::getList()[i].getVectorList()[0].getAxisX().getRangeStop();
+        qDebug() << UsableControllers::getList()[i].getVectorList()[0].getAxisX().getRangeStart();
         i++;
+
     }
     if(message != ""){
         qDebug() << message;

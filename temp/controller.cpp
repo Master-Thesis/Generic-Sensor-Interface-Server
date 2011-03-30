@@ -18,6 +18,11 @@ void Controller::addButton(Button newButton)
     buttons.append(newButton);
 }
 
+void Controller::addVector(Vector newVector)
+{
+    vectors.append(newVector);
+}
+
 QByteArray Controller::printButtonListDetails()
 {
     QByteArray *outArray = new QByteArray();

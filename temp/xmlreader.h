@@ -6,6 +6,7 @@
 #include <QXmlStreamReader>
 #include <iostream>
 #include <QFile>
+#include "vector.h"
 
 class XMLReader
 {
@@ -19,11 +20,13 @@ public:
     Button ReadButton();
     unsigned long long ConvertStringToHex(QString hexVal);
     Axis ReadAxis();
+    Vector ReadVector();
 
 private:
     Controller control;
     SensorXY xy;
     Button button;
+    Vector v;
     QXmlStreamReader Rxml;
     QString filename;
 
