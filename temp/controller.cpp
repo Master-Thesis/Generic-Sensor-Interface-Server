@@ -18,7 +18,7 @@ void Controller::addButton(Button newButton)
     buttons.append(newButton);
 }
 
-void Controller::addVector(Vector newVector)
+void Controller::addVector(VectorSensor newVector)
 {
     vectors.append(newVector);
 }

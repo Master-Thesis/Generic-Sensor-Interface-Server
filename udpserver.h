@@ -5,6 +5,7 @@
 #include <QtNetwork>
 
 #include "listdevices.h"
+#include "temp/supporteddevices.h"
 #include "mapper.h"
 #include "nodesocket.h"
 

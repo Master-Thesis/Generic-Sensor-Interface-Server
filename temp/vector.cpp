@@ -1,5 +1,5 @@
 #include "vector.h"
 
-Vector::Vector()
+VectorSensor::VectorSensor()
 {
 }

@@ -25,15 +25,16 @@ SOURCES += main.cpp \
     temp/controller.cpp \
     temp/connecteddevice.cpp \
     temp/button.cpp \
-    temp/allfiles.cpp \
     temp/allconnected.cpp \
     temp/usablecontrollers.cpp \
     nodesocket.cpp \
     node.cpp \
     wiimote/wiimote.cpp \
     wiimote/run.cpp \
+    temp/vector.cpp \
     temp/axis.cpp \
-    temp/vector.cpp
+    temp/supporteddevices.cpp
+
 
 HEADERS += \
     udpserver.h \
@@ -46,7 +47,6 @@ HEADERS += \
     temp/controller.h \
     temp/connecteddevice.h \
     temp/button.h \
-    temp/allfiles.h \
     temp/allconnected.h \
     temp/usablecontrollers.h \
     nodesocket.h \
@@ -58,8 +58,10 @@ HEADERS += \
     wiimote/wiimote.h \
     wiimote/setupapi.h \
     wiimote/run.h \
+    temp/vector.h \
     temp/axis.h \
-    temp/vector.h
+    temp/supporteddevices.h
+
 
 #DEFINES += _WIN32_WINNT="0x0501"
 #DEFINES += _WIN32_WINDOWS="0x0501"
@@ -69,7 +71,7 @@ LIBS += libsetupapi \
     libuser32
 #INCLUDEPATH += "C:\\Qt\\2010.05\\mingw\\include" \
 
-LIBS +=  -luser32 -L"C:\\Qt\\2010.05\\mingw\\lib"
+LIBS +=  -luser32 -L"C:\\Dev\\Qt\\2010.05\\mingw\\lib"
 
 LIBS += "C:\Qt\2010.05\mingw\lib\libwinmm.a"
 

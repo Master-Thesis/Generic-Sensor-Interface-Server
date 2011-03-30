@@ -134,6 +134,7 @@ void UDPServer::sendHelp()
     hlp += "LSBTS\tGenerates a list of all usable buttons on the selected device\n";
     hlp += "KMAP\tBinds button to certain String\n";
     hlp += "UMAP\tUndo a bind of a certain button";
+    hlp += "SUPDVS\tGenerates a numberd list of all supported devices (with extra parameters b, p and v if needed)";
     sendDatagram(hlp.toLatin1());
 }
 
@@ -220,29 +221,19 @@ void UDPServer::supportedDevices(const QString cmd)
     {
         int intPos = cmdList[i].size() - 1;
         int number = cmdList[i].toLower().data()[intPos].digitValue();
-        cmdStr.remove(intPos,1);
+
+        cmdStr = cmdList[i].remove(intPos,1);
 
         map[cmdStr] =  number;
     }
 
-    if (map.contains("b")){
-        methodString += "b " + map.value("b");
-        methodString += ",";
-    }
-    else
-        methodString += "b 0,";
-    if (map.contains("p")){
-        methodString += "p " + map.value("b");
-        methodString += ",";
-    }
-    else
-        methodString += "p 0,";
-    if (map.contains("v"))
-        methodString += "v " + map.value("b");
-    else
-        methodString += "v 0";
+    methodString.append(QString("b %1,").arg(map.value("b", 0)));
+    methodString.append(QString("p %1,").arg(map.value("p", 0)));
+    methodString.append(QString("v %1").arg(map.value("v", 0)));
 
-    // TODO pass methodString to function
+    qDebug() << "methodString: " << methodString;
+
+    msg += SupportedDevices::instance()->printDevicesWithString(methodString);
 
     sendDatagram(msg.toLatin1());
 }

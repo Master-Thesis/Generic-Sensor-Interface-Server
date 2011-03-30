@@ -24,6 +24,7 @@
 #include "setupapi.h"
 #include <stdio.h>
 #include <QDebug>
+#define CHAR char
 extern "C" {
 # ifdef __MINGW32__
 #  include <ddk/hidsdi.h>// from WinDDK

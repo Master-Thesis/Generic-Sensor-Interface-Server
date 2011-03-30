@@ -57,7 +57,7 @@ public:
         void setNumberOfVectors(int newNumberXYZ){numberOfXYZ = newNumberXYZ;}
 
         // Getters XYZ Part
-        QList<Vector> getVectorList(){ return vectors;}
+        QList<VectorSensor> getVectorList(){ return vectors;}
         int getNumberOfVectors(){return numberOfXYZ;}
 
 
@@ -78,7 +78,7 @@ public:
         void addButton(Button);
         QString findNameForButton(int buttonValue);
         void addXY(SensorXY);
-        void addVector(Vector newVector);
+        void addVector(VectorSensor newVector);
 
 
 private:
@@ -110,7 +110,7 @@ private:
 
         //Info of all Vectors, XYZ sensors
         int numberOfXYZ;
-        QList<Vector> vectors;
+        QList<VectorSensor> vectors;
 
 
 

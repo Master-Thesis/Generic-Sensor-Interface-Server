@@ -20,13 +20,13 @@ public:
     Button ReadButton();
     unsigned long long ConvertStringToHex(QString hexVal);
     Axis ReadAxis();
-    Vector ReadVector();
+    VectorSensor ReadVector();
 
 private:
     Controller control;
     SensorXY xy;
     Button button;
-    Vector v;
+    VectorSensor v;
     QXmlStreamReader Rxml;
     QString filename;
 

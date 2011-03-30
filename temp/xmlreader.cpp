@@ -395,11 +395,11 @@ Button XMLReader::ReadButton()
 }
 
 
-Vector XMLReader::ReadVector()
+VectorSensor XMLReader::ReadVector()
 {
     qDebug() << "Read Vector";
     //Button button;
-    Vector vector;
+    VectorSensor vector;
     while(!Rxml.atEnd())
         {
                 if(Rxml.isEndElement())

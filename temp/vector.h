@@ -4,10 +4,10 @@
 #include <QString>
 #include "axis.h"
 
-class Vector
+class VectorSensor
 {
 public:
-    Vector();
+    VectorSensor();
 
     //setters
     void setFormatXYZ(QString newFormat){formatXYZ = newFormat;}
