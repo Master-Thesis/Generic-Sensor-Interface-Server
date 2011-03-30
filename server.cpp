@@ -1,11 +1,13 @@
 #include <QtGui>
 #include <QtNetwork>
+#define _WIN32_WINNT 0x0501
 #include <windows.h>
 
 #include "udpserver.h"
 #include "mapper.h"
 #include "server.h"
 #include "temp/handledevice.h"
+
 
 Server::Server(QWidget *parent) :
     QDialog(parent)

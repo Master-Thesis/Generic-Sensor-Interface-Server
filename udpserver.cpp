@@ -1,5 +1,6 @@
 #include "udpserver.h"
 
+#include <QChar>
 #include "listdevices.h"
 #include "mapper.h"
 #include "nodesocket.h"
@@ -218,18 +219,22 @@ void UDPServer::supportedDevices(const QString cmd)
     for(int i = 0; i < cmdList.size(); i++)
     {
         int intPos = cmdList[i].size() - 1;
-        int number = cmdList[i].toLower().data()[intPos];
+        int number = cmdList[i].toLower().data()[intPos].digitValue();
         cmdStr.remove(intPos,1);
 
         map[cmdStr] =  number;
     }
 
-    if (map.contains("b"))
-        methodString += "b " + map.value("b") + ",";
+    if (map.contains("b")){
+        methodString += "b " + map.value("b");
+        methodString += ",";
+    }
     else
         methodString += "b 0,";
-    if (map.contains("p"))
-        methodString += "p " + map.value("b") + ",";
+    if (map.contains("p")){
+        methodString += "p " + map.value("b");
+        methodString += ",";
+    }
     else
         methodString += "p 0,";
     if (map.contains("v"))

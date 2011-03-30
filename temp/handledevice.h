@@ -2,7 +2,8 @@
 #define HANDLEDEVICE_H
 
 #include <QThread>
-
+#define _WIN32_WINNT 0x0501
+#include <windows.h>
 #include "controller.h"
 #include "usablecontrollers.h"
 

@@ -2,7 +2,8 @@
 #define SERVER_H
 
 #include <QDialog>
-
+#define _WIN32_WINNT 0x0501
+#include <windows.h>
 #include "temp/handledevice.h"
 #include "udpserver.h"
 

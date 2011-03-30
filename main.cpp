@@ -2,7 +2,7 @@
 #include <QtNetwork>
 #include <QDebug>
 #include <iostream>
-
+#define _WIN32_WINNT 0x0501
 #include "temp/usablecontrollers.h"
 #include "udpserver.h"
 #include "server.h"
