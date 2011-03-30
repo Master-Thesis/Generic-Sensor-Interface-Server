@@ -119,7 +119,7 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         break;
     }
 
-    qDebug() << QString::number(dwKeystate,16);
+    // qDebug() << QString::number(dwKeystate,16);
 
     int size2 = UsableControllers::getList().size();
     int i = 0;
@@ -129,7 +129,6 @@ void HandleDevice::handleIt(RAWINPUT *raw)
     {
         if(UsableControllers::getList()[i].getVendorID() == VendorID && UsableControllers::getList()[i].getProductID() == ProductID)
         {
-           // message += UsableControllers::getList()[i].getDescription() + "\t";
             QString nrContr;
             nrContr = nrContr.setNum(i);
             message += nrContr;
@@ -143,9 +142,6 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                 {
                 case RIM_TYPEHID:
                         waarde = UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask() & dwKeystate; //voor thrustmaster
-                        //qDebug() << QString::number(UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask(),16);
-                        //qDebug() << QString::number(waarde,16);
-                        //qDebug() << "________________" ;
                         break;
                 case RIM_TYPEMOUSE:
                         break;
@@ -195,41 +191,25 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                 else{
                 //XY-axis
 
+                    //X-axis
                     signed long long valueX = UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask() & waarde;
-                    //qDebug() << "waarde " << waarde;
-                    //qDebug() << QString::number(UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask(), 16);
-                    //qDebug() << "voor delen X" << nr << " " << QString::number(valueX, 16);
                     valueX /= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask()/0xff);
                     if(valueX > UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()){
                         valueX -= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()-UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStart() + 1);
-                        qDebug() << "start " << UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStart();
-                        qDebug() << "valueX " << valueX;
                     }
                     QString valX;
                     valX = valX.setNum(valueX);
-                    //qDebug() << "X" << nr << " " << QString::number(valueX, 16);
                     message += " X" + nr + "_" + valX;
 
                     //Y-axis
                     long long valueY = UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getMask() & waarde;
-
-                    //qDebug() << QString::number(UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask(), 16);
                     valueY /= (UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getMask()/0xff);
-//                    if(valueY > UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStop()){
-//                        valueY -= (UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStop()-UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStart() + 1);
-//                        qDebug() << "start " << UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStart();
-//                        qDebug() << "valueX " << valueY;
-//                    }
-                    if(valueY > 127){
-                        valueY = valueY - 2 * 128;}
-                    qDebug() << "valueY " << valueY;
+//                    if(valueY > 127){
+//                        valueY = valueY - 2 * 128;}
                     QString valY;
                     valY = valY.setNum(valueY);
-                    //qDebug() << "X" << nr << " " << QString::number(valueX, 16);
                     message += " Y" + nr + "_" + valY;
-
-
-                }
+}
                 k++;
             }
 
@@ -249,7 +229,7 @@ void HandleDevice::handleIt(RAWINPUT *raw)
             else if(raw->header.dwType == RIM_TYPEKEYBOARD)
             {
                 int j = 0;
-                int waarde2 = raw->data.keyboard.VKey; //Thrustmaster
+                int waarde2 = raw->data.keyboard.VKey;
                 while(j<UsableControllers::getList()[i].getButtonList().size())
                 {
                     if(UsableControllers::getList()[i].getButtonList()[j].getBitMaskPressed() == waarde2 )
@@ -261,8 +241,6 @@ void HandleDevice::handleIt(RAWINPUT *raw)
             }
 
 }
-        qDebug() << UsableControllers::getList()[i].getVectorList()[0].getAxisX().getRangeStop();
-        qDebug() << UsableControllers::getList()[i].getVectorList()[0].getAxisX().getRangeStart();
         i++;
 
     }

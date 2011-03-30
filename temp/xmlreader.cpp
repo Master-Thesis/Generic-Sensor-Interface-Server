@@ -3,7 +3,6 @@
 //Read XML and return Controller
 Controller XMLReader::OpenXMLFile(QString filename)
 {
-    //qDebug() << "enter XMLReader";
     QFile file(filename);
     if (!file.open(QFile::ReadOnly | QFile::Text))
             {
@@ -14,16 +13,13 @@ Controller XMLReader::OpenXMLFile(QString filename)
 
     Rxml.setDevice(&file);
     Rxml.readNext();
-
     while(!Rxml.atEnd())
     {
         if(Rxml.isStartElement())
         {
             if(Rxml.name() == "CONTROLLER")
             {
-                //std::cout << "CONTROLLER \n\n";
                 ReadController();
-               // control.printAll();
             }
             else
             {
@@ -41,7 +37,6 @@ Controller XMLReader::OpenXMLFile(QString filename)
 
 void XMLReader::ReadController()
 {
-    qDebug() << "enter readController";
         while(!Rxml.atEnd())
         {
                 if(Rxml.isEndElement())
@@ -62,17 +57,14 @@ void XMLReader::ReadController()
                         else if(Rxml.name() == "Type")
                         {
                             control.setType(ReadTekstElement());
-                            //control.setVendorID(ReadTekstElement().toInt());
                         }
                         else if(Rxml.name() == "VendorID")
                         {
                             control.setVendorID(ConvertStringToHex(ReadTekstElement()));
-                            //qDebug() << "id" << QString::number(ConvertStringToHex(ReadTekstElement()), 16);
                         }
                         else if(Rxml.name() == "ProductID")
                         {
                             control.setProductID(ConvertStringToHex(ReadTekstElement()));
-
                         }
                         else if(Rxml.name() == "Protocol")
                         {
@@ -90,10 +82,6 @@ void XMLReader::ReadController()
                             while(i<control.getNumberOfXY())
                             {
                                 i++;
-
-//                                SensorXY *tempXY;
-//                                tempXY = &xy;
-
                                 QString name = "XY_";
                                 QString text_integer;
                                 name += text_integer.setNum(i);
@@ -101,9 +89,7 @@ void XMLReader::ReadController()
                                 {
                                     xy = ReadXY();
                                 }
-                               // control.addXY(xy);
                                 Rxml.readNext();
-
                             }
                         }
                         else if(Rxml.name() == "Format_button")
@@ -116,40 +102,11 @@ void XMLReader::ReadController()
                         }
                         else if(Rxml.name() == "General_Mask")
                         {
-                            //std::cout << "Button " << ReadTekstElement().toStdString() << std::endl;
-                           // std::cout << std::hex << ConvertStringToHex(ReadTekstElement()) << std::endl;
-                           // std::cout << "Button ";
                             control.setGeneralButtonMask(ConvertStringToHex(ReadTekstElement()));
                         }
-//                        else if(Rxml.name() == "General_Flag_Button_pressed")
-//                        {
-//                            QString temp = ReadTekstElement();
-//                            //temp.toLower();
-//                            if(temp.toLower() == "true"){
-//                                control.setGeneralFlagPressed(true);
-//                            }
-//                            else
-//                            {
-//                                control.setGeneralFlagPressed(false);
-//                            }
-
-//                        }
-//                        else if(Rxml.name() == "Format_flag")
-//                        {
-//                            control.setFormatFlagButton(ReadTekstElement());
-//                        }
-//                        else if(Rxml.name() == "Bytes_flag")
-//                        {
-//                            control.setBytesButtonFlag(ReadTekstElement().toInt());
-//                        }
-//                        else if(Rxml.name() == "Press_flag_value")
-//                        {
-//                            control.setPressFlagValue(ReadTekstElement().toInt());
-//                        }
                         else if(Rxml.name() == "Flag_Button_pressed")
                         {
                             QString temp = ReadTekstElement();
-                            //temp.toLower();
                             if(temp.toLower() == "true"){
                                 control.setFlagButtonPressed(true);
                             }
@@ -158,17 +115,14 @@ void XMLReader::ReadController()
                                 control.setFlagButtonPressed(false);
                             }
                         }
-
                         else if(Rxml.name() == "Number_of_Buttons")
                         {
                             control.setNumberOfButtons(ReadTekstElement().toInt());
-
                             Rxml.readNext();
                             int i = 0;
                             while(i<control.getNumberOfButtons())
                             {
                                 i++;
-
                                 QString name = "Button"; // nog aanpassen
                                 QString text_integer;
                                 name += text_integer.setNum(i);
@@ -176,54 +130,27 @@ void XMLReader::ReadController()
                                 {
                                     button = ReadButton();
                                 }
-                                //control.addButton(temp);
                                 Rxml.readNext();
                             }
                         }
                         else if(Rxml.name() == "Number_of_Vectors")
                         {
-                            qDebug() << "XYZ";
-                            //control.setNumberOfButtons(ReadTekstElement().toInt());
                             control.setNumberOfVectors(ReadTekstElement().toInt());
-
                             Rxml.readNext();
                             int i = 0;
                             while(i<control.getNumberOfVectors())
                             {
                                 i++;
-
-                                QString name = "XYZ_"; // nog aanpassen
+                                QString name = "XYZ_"; //
                                 QString text_integer;
                                 name += text_integer.setNum(i);
                                 if(Rxml.name() == name)
                                 {
                                     v = ReadVector();
                                 }
-                                //control.addButton(temp);
                                 Rxml.readNext();
                             }
                         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         Rxml.readNext();
                 }
                 else
@@ -231,7 +158,6 @@ void XMLReader::ReadController()
                         Rxml.readNext();
                 }
         }
-        //control.printAll();
 }
 
 SensorXY XMLReader::ReadXY()
@@ -257,12 +183,10 @@ SensorXY XMLReader::ReadXY()
                         if(Rxml.name() == "Bytes_XY")
                         {
                             xy.setBytes(ReadTekstElement().toInt());
-                            //xy.setFormat(ReadTekstElement());
                         }
                         if(Rxml.name() == "Fixed")
                         {
                             QString temp = ReadTekstElement();
-                            //temp.toLower();
                             if(temp.toLower() == "true"){
                                 xy.setBoolFixedValue(true);
                             }
@@ -270,31 +194,14 @@ SensorXY XMLReader::ReadXY()
                             {
                                 xy.setBoolFixedValue(false);
                             }
-
-
-
-                            //xy.setFormat(ReadTekstElement());
                         }
                         if(Rxml.name() == "Number_of_Buttons")
                         {
                             xy.setNumberOfButtons(ReadTekstElement().toInt());
-                            //xy.setFormat(ReadTekstElement());
                         }
-//                        else if(Rxml.name() == "Range_startvalue")
-//                        {
-//                            xy.setRangeStart(ReadTekstElement().toInt());
-//                        }
-//                        else if(Rxml.name() == "Range_stopvalue")
-//                        {
-//                            xy.setRangeStop(ReadTekstElement().toInt());
-//                        }
                         if(Rxml.name() == "General_Mask_XY")
                         {
-                            //std::cout << "XY ";
                             xy.setGeneralXYMask(ConvertStringToHex(ReadTekstElement()));
-                            //std::cout << "XY " << ReadTekstElement().toStdString() << std::endl;
-                            //std::cout << std::hex << ConvertStringToHex(ReadTekstElement()) << std::endl;
-                            //xy.setFormat(ReadTekstElement());
                         }
 
                         else if(Rxml.name() == "UP")
@@ -316,7 +223,7 @@ SensorXY XMLReader::ReadXY()
                         else if(Rxml.name() == "UP_LEFT")
                         {
                             xy.setUpLeft(ConvertStringToHex(ReadTekstElement()));;
-                                                    }
+                        }
                         else if(Rxml.name() == "DOWN_LEFT")
                         {
                             xy.setDownLeft(ConvertStringToHex(ReadTekstElement()));;
@@ -331,24 +238,20 @@ SensorXY XMLReader::ReadXY()
                         }
                         else if(Rxml.name() == "X_AXIS")
                         {
-                            qDebug() << "Read Axis X";
                             Axis x = ReadAxis();
                             xy.setXAxis(x);
                         }
                         else if(Rxml.name() == "Y_AXIS")
                         {
-                            qDebug() << "Read Axis Y";
                             Axis y = ReadAxis();
                             xy.setYAxis(y);
                         }
-
-
                         Rxml.readNext();
-                }
-                else
-                {
+                    }
+                    else
+                    {
                         Rxml.readNext();
-                }
+                    }
         }
 
     control.addXY(xy);
@@ -397,8 +300,6 @@ Button XMLReader::ReadButton()
 
 VectorSensor XMLReader::ReadVector()
 {
-    qDebug() << "Read Vector";
-    //Button button;
     VectorSensor vector;
     while(!Rxml.atEnd())
         {
@@ -416,11 +317,9 @@ VectorSensor XMLReader::ReadVector()
                         if(Rxml.name() == "Format_XYZ")
                         {
                             vector.setFormatXYZ(ReadTekstElement());
-                            //button.setName(ReadTekstElement());
                         }
                         else if(Rxml.name() == "Bytes_XYZ")
                         {
-                            //button.setBitMaskPressed(ConvertStringToHex(ReadTekstElement()));;
                             vector.setNumberBytesXYZ(ReadTekstElement().toInt());
                         }
                         else if(Rxml.name() == "General_Mask_XYZ")
@@ -429,19 +328,16 @@ VectorSensor XMLReader::ReadVector()
                         }
                         else if(Rxml.name() == "X_AXIS")
                         {
-                            qDebug() << "Read Axis X";
                             Axis x = ReadAxis();
                             vector.setAxisX(x);
                         }
                         else if(Rxml.name() == "Y_AXIS")
                         {
-                            qDebug() << "Read Axis Y";
                             Axis y = ReadAxis();
                             vector.setAxisY(y);
                         }
                         else if(Rxml.name() == "Z_AXIS")
                         {
-                            qDebug() << "Read Axis Z";
                             Axis z = ReadAxis();
                             vector.setAxisZ(z);
                         }
@@ -459,7 +355,6 @@ VectorSensor XMLReader::ReadVector()
 
 Axis XMLReader::ReadAxis()
 {
-    qDebug() << "Read Axis";
     Axis axis;
     while(!Rxml.atEnd())
         {
@@ -481,17 +376,14 @@ Axis XMLReader::ReadAxis()
                         else if(Rxml.name() == "Range_Start")
                         {
                             axis.setRangeStart(ReadTekstElement().toInt());
-                            //button.setBitMaskPressed(ConvertStringToHex(ReadTekstElement()));;
                         }
                         else if(Rxml.name() == "Range_Stop")
                         {
                             axis.setRangeEnd(ReadTekstElement().toInt());
-                            //button.setBitMaskRelease(ConvertStringToHex(ReadTekstElement()));;
                         }
                         else if(Rxml.name() == "Mask"){
                             axis.setMask(ConvertStringToHex(ReadTekstElement()));
                         }
-
                         Rxml.readNext();
                 }
                 else
@@ -499,9 +391,10 @@ Axis XMLReader::ReadAxis()
                         Rxml.readNext();
                 }
         }
-    //control.addButton(button);
     return axis;
 }
+
+
 
 QString XMLReader::ReadTekstElement()
 {
@@ -531,10 +424,17 @@ QString XMLReader::ReadTekstElement()
 return tekst;
 }
 
+
 unsigned long long XMLReader::ConvertStringToHex(QString hexVal){
     unsigned long long i = 0;
-    if ( hexVal.startsWith( "0x" ) ) i = hexVal.mid( 2 ).toULongLong(0 , 16);
-    else if ( hexVal.startsWith( "0" ) ) i = hexVal.mid( 1 ).toULongLong( 0, 8 );
-    else i = hexVal.toULongLong();
+    if( hexVal.startsWith( "0x" )){
+        i = hexVal.mid( 2 ).toULongLong(0 , 16);
+    }
+    else if( hexVal.startsWith( "0" ) ){
+        i = hexVal.mid( 1 ).toULongLong( 0, 8 );
+    }
+    else{
+        i = hexVal.toULongLong();
+    }
     return i;
 }
