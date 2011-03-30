@@ -11,7 +11,6 @@ void UsableControllers::init()
 {
     qDebug() << "UsableControllers::init() entered";
 
-    SupportedDevices supported;
     AllConnected connected;
 
     qDebug() << "UsableControllers::init() start comparison";
@@ -26,8 +25,8 @@ void UsableControllers::init()
         int productID = connected.getAllConnectedList()[i].getProductID();
         int j = 0;
         while(j<size2){
-            int vendorID2 = supported.getAllControllersList()[j].getVendorID();
-            int productID2 = supported.getAllControllersList()[j].getProductID();
+            int vendorID2 = SupportedDevices::instance()->getAllDevicesList()[j].getVendorID();
+            int productID2 = SupportedDevices::instance()->getAllDevicesList()[j].getProductID();
 //            qDebug() << "------COMP-----";
 //            qDebug() << "vid1: " << QString::number(vendorID,16);
 //            qDebug() << "vid2: " << QString::number(vendorID2,16);
@@ -35,7 +34,7 @@ void UsableControllers::init()
 //            qDebug() << "pid1: " << QString::number(productID2,16);
 //            qDebug() << "///////////////";
             if(vendorID == vendorID2 && productID == productID2){
-                usableControllers.append(supported.getAllControllersList()[j]);
+                usableControllers.append(SupportedDevices::instance()->getAllDevicesList()[j]);
             }
             j++;
         }

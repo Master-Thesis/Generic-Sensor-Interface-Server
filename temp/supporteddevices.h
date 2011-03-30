@@ -31,6 +31,7 @@ private:
     SupportedDevices();
     ~SupportedDevices();
 
+    static SupportedDevices* m_supdevs;
     static QList<Controller> devices;
 };
 

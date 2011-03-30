@@ -37,8 +37,8 @@ SupportedDevices* SupportedDevices::instance()
 void SupportedDevices::drop()
 {
     mutex.lock();
-    delete m_mapper;
-    m_mapper = 0;
+    delete m_supdevs;
+    m_supdevs = 0;
     mutex.unlock();
 }
 
