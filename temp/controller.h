@@ -43,14 +43,14 @@ public:
         // Setters Buttons Part
         void setNumberOfButtons(int newNumberButtons) {numberOfButtons = newNumberButtons;}
         void setFormatButtons(QString newFormatButtons) {formatButtons = newFormatButtons;}
-        void setGeneralFlagPressed(bool newFlag) {generalFlagPressed = newFlag;}
-        void setFormatFlagButton(QString newFormatFlagButton){ formatFlagButton = newFormatFlagButton;}
-        void setBytesButtonFlag(int newBytesButtonFlag) {bytesButtonFlag = newBytesButtonFlag;}
-        void setPressFlagValue(int newPressFlagValue){ pressFlagValue = newPressFlagValue;}
-        void setFlagButtonPressed(bool newFlagButtonPressed) {flagButtonPressed = newFlagButtonPressed;}
+        //void setGeneralFlagPressed(bool newFlag) {generalFlagPressed = newFlag;}
+        //void setFormatFlagButton(QString newFormatFlagButton){ formatFlagButton = newFormatFlagButton;}
+        //void setBytesButtonFlag(int newBytesButtonFlag) {bytesButtonFlag = newBytesButtonFlag;}
+        //void setPressFlagValue(int newPressFlagValue){ pressFlagValue = newPressFlagValue;}
+        void setFlagButtonPressed(bool newFlagButtonPressed) {flagButtonPressed = newFlagButtonPressed;} //
         void setBytesButtons(int newBytesButtons) {numberOfBytesButtons = newBytesButtons;}
-        void setGeneralButtonMask(unsigned long int newGeneralButtonMask) {generalButtonMask = newGeneralButtonMask;}
-        unsigned long int getGeneralButtonMask() {return generalButtonMask;}
+        void setGeneralButtonMask(unsigned long long newGeneralButtonMask) {generalButtonMask = newGeneralButtonMask;}
+        unsigned long long getGeneralButtonMask() {return generalButtonMask;}
 
         // Getters XY Part
         int getNumberOfXY() {return numberOfXY;}
@@ -85,11 +85,11 @@ private:
         QList<Button> buttons;
         QString formatButtons;
         int numberOfBytesButtons;
-        unsigned long int generalButtonMask;
-        bool generalFlagPressed;
-        QString formatFlagButton;
-        int bytesButtonFlag;
-        int pressFlagValue;
+        unsigned long long generalButtonMask;
+        //bool generalFlagPressed;
+        //QString formatFlagButton;
+        //int bytesButtonFlag;
+        //int pressFlagValue;
         bool flagButtonPressed;
 
         //Info of all XY sensors

@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     nodesocket.cpp \
     node.cpp \
     wiimote/wiimote.cpp \
-    wiimote/run.cpp
+    wiimote/run.cpp \
+    temp/axis.cpp
 
 HEADERS += \
     udpserver.h \
@@ -55,7 +56,8 @@ HEADERS += \
     wiimote/wiimote_common.h \
     wiimote/wiimote.h \
     wiimote/setupapi.h \
-    wiimote/run.h
+    wiimote/run.h \
+    temp/axis.h
 
 #DEFINES += _WIN32_WINNT="0x0501"
 #DEFINES += _WIN32_WINDOWS="0x0501"

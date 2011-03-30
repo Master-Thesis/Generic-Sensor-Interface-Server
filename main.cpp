@@ -13,9 +13,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    Run *thread = new Run(NULL);
-    //connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    thread->start();
+//    Run *thread = new Run(NULL);
+//    //connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+//    thread->start();
     QApplication app(argc, argv);
 
     UsableControllers controllers;

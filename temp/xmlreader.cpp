@@ -121,31 +121,31 @@ void XMLReader::ReadController()
                            // std::cout << "Button ";
                             control.setGeneralButtonMask(ConvertStringToHex(ReadTekstElement()));
                         }
-                        else if(Rxml.name() == "General_Flag_Button_pressed")
-                        {
-                            QString temp = ReadTekstElement();
-                            //temp.toLower();
-                            if(temp.toLower() == "true"){
-                                control.setGeneralFlagPressed(true);
-                            }
-                            else
-                            {
-                                control.setGeneralFlagPressed(false);
-                            }
+//                        else if(Rxml.name() == "General_Flag_Button_pressed")
+//                        {
+//                            QString temp = ReadTekstElement();
+//                            //temp.toLower();
+//                            if(temp.toLower() == "true"){
+//                                control.setGeneralFlagPressed(true);
+//                            }
+//                            else
+//                            {
+//                                control.setGeneralFlagPressed(false);
+//                            }
 
-                        }
-                        else if(Rxml.name() == "Format_flag")
-                        {
-                            control.setFormatFlagButton(ReadTekstElement());
-                        }
-                        else if(Rxml.name() == "Bytes_flag")
-                        {
-                            control.setBytesButtonFlag(ReadTekstElement().toInt());
-                        }
-                        else if(Rxml.name() == "Press_flag_value")
-                        {
-                            control.setPressFlagValue(ReadTekstElement().toInt());
-                        }
+//                        }
+//                        else if(Rxml.name() == "Format_flag")
+//                        {
+//                            control.setFormatFlagButton(ReadTekstElement());
+//                        }
+//                        else if(Rxml.name() == "Bytes_flag")
+//                        {
+//                            control.setBytesButtonFlag(ReadTekstElement().toInt());
+//                        }
+//                        else if(Rxml.name() == "Press_flag_value")
+//                        {
+//                            control.setPressFlagValue(ReadTekstElement().toInt());
+//                        }
                         else if(Rxml.name() == "Flag_Button_pressed")
                         {
                             QString temp = ReadTekstElement();
@@ -285,6 +285,20 @@ SensorXY XMLReader::ReadXY()
                         {
                             xy.setDownRight(ConvertStringToHex(ReadTekstElement()));;
                         }
+                        else if(Rxml.name() == "X_AXIS")
+                        {
+                            qDebug() << "Read Axis X";
+                            Axis x = ReadAxis();
+                            xy.setXAxis(x);
+                        }
+                        else if(Rxml.name() == "Y_AXIS")
+                        {
+                            qDebug() << "Read Axis Y";
+                            Axis y = ReadAxis();
+                            xy.setYAxis(y);
+                        }
+
+
                         Rxml.readNext();
                 }
                 else
@@ -336,6 +350,52 @@ Button XMLReader::ReadButton()
     return button;
 }
 
+Axis XMLReader::ReadAxis()
+{
+    qDebug() << "Read Axis";
+    Axis axis;
+    while(!Rxml.atEnd())
+        {
+                if(Rxml.isEndElement())
+                {
+                        Rxml.readNext();
+                        break;
+                }
+                else if(Rxml.isCharacters())
+                {
+                        Rxml.readNext();
+                }
+                else if(Rxml.isStartElement())
+                {
+                        if(Rxml.name() == "Format")
+                        {
+                            axis.setFormat(ReadTekstElement());
+                        }
+                        else if(Rxml.name() == "Range_Start")
+                        {
+                            axis.setRangeStart(ReadTekstElement().toInt());
+                            //button.setBitMaskPressed(ConvertStringToHex(ReadTekstElement()));;
+                        }
+                        else if(Rxml.name() == "Range_Stop")
+                        {
+                            axis.setRangeEnd(ReadTekstElement().toInt());
+                            //button.setBitMaskRelease(ConvertStringToHex(ReadTekstElement()));;
+                        }
+                        else if(Rxml.name() == "Mask"){
+                            axis.setMask(ConvertStringToHex(ReadTekstElement()));
+                        }
+
+                        Rxml.readNext();
+                }
+                else
+                {
+                        Rxml.readNext();
+                }
+        }
+    //control.addButton(button);
+    return axis;
+}
+
 QString XMLReader::ReadTekstElement()
 {
     QString tekst;
@@ -364,13 +424,13 @@ QString XMLReader::ReadTekstElement()
 return tekst;
 }
 
-unsigned long int XMLReader::ConvertStringToHex(QString hexVal){
-    unsigned long int i = 0;
+unsigned long long XMLReader::ConvertStringToHex(QString hexVal){
+    unsigned long long i = 0;
     //std::cout << "in: " << hexVal.toStdString() << " out: ";
-    if ( hexVal.startsWith( "0x" ) ) i = hexVal.mid( 2 ).toULong(0 , 16);
+    if ( hexVal.startsWith( "0x" ) ) i = hexVal.mid( 2 ).toULongLong(0 , 16);
         //.toInt( 0, 16 );
-    else if ( hexVal.startsWith( "0" ) ) i = hexVal.mid( 1 ).toULong( 0, 8 );
-    else i = hexVal.toULong();
+    else if ( hexVal.startsWith( "0" ) ) i = hexVal.mid( 1 ).toULongLong( 0, 8 );
+    else i = hexVal.toULongLong();
     //std::cout << std::hex << i << std::endl;
     return i;
 }

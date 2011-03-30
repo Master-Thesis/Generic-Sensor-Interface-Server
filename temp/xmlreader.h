@@ -17,7 +17,8 @@ public:
     QString ReadTekstElement();
     SensorXY ReadXY();
     Button ReadButton();
-    unsigned long int ConvertStringToHex(QString hexVal);
+    unsigned long long ConvertStringToHex(QString hexVal);
+    Axis ReadAxis();
 
 private:
     Controller control;

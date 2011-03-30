@@ -113,13 +113,13 @@ void AllConnected::ListAllInfo()
 
       }
 
-unsigned long int AllConnected::ConvertStringToHex(QString hexVal){
-    unsigned long int i = 0;
+unsigned long long AllConnected::ConvertStringToHex(QString hexVal){
+    unsigned long long i = 0;
     //std::cout << "in: " << hexVal.toStdString() << " out: ";
-    if ( hexVal.startsWith( "0x" ) ) i = hexVal.mid( 2 ).toULong(0 , 16);
+    if ( hexVal.startsWith( "0x" ) ) i = hexVal.mid( 2 ).toULongLong(0 , 16);
         //.toInt( 0, 16 );
-    else if ( hexVal.startsWith( "0" ) ) i = hexVal.mid( 1 ).toULong( 0, 8 );
-    else i = hexVal.toULong();
+    else if ( hexVal.startsWith( "0" ) ) i = hexVal.mid( 1 ).toULongLong( 0, 8 );
+    else i = hexVal.toULongLong();
     //std::cout << std::hex << i << std::endl;
     return i;
 }

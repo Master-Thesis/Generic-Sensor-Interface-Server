@@ -115,10 +115,10 @@ QByteArray Controller::printButtonInfo()
     outStream << "\nButtons:";
     outStream << "Format:\t" << getFormatButtons();
     outStream << "Bytes:\t" << getNumberOfBytesButtons();
-    outStream << generalFlagPressed;
-    outStream << formatFlagButton;
-    outStream << bytesButtonFlag;
-    outStream << pressFlagValue;
+    //outStream << generalFlagPressed;
+    //outStream << formatFlagButton;
+    //outStream << bytesButtonFlag;
+    //outStream << pressFlagValue;
     outStream << flagButtonPressed;
     outStream << printButtonList();
 

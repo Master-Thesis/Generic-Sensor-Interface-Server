@@ -4,6 +4,7 @@
 #include <QString>
 #include <iostream>
 #include <QDebug>
+#include "axis.h"
 
 class SensorXY
 {
@@ -30,7 +31,13 @@ public:
     void setUpRight(int newUpRight) {upRight = newUpRight;}
     void setDownRight(int newDownRight) {downRight = newDownRight;}
     void setNumberOfAxis(int newNumberOfAxis) {axis = newNumberOfAxis;}
-    void setGeneralXYMask(unsigned long int newGeneralXYMask) {generalXYMask = newGeneralXYMask;}
+    void setGeneralXYMask(unsigned long long newGeneralXYMask) {generalXYMask = newGeneralXYMask;}
+
+    void setXAxis(Axis newX){x = newX;}
+    void setYAxis(Axis newY){y = newY;}
+
+    Axis getXAxis(){return x;}
+    Axis getYAxis(){return y;}
 
     const int getUp() {return up;}
     const int getDown() {return down;}
@@ -42,7 +49,8 @@ public:
     const int getDownLeft() {return downLeft;}
     const int getUpRight() {return upRight;}
     const int getDownRight() {return downRight;}
-    const unsigned long int getGeneralXYMask() {return generalXYMask;}
+    const unsigned long long getGeneralXYMask() {return generalXYMask;}
+    const bool getFixed() {return fixedValue;}
 
     QByteArray printInfo() const;
     QByteArray printInfoDetails() const;
@@ -61,7 +69,9 @@ private:
     int upRight;
     int downRight;
     int axis;
-    unsigned long int generalXYMask;
+    Axis x;
+    Axis y;
+    unsigned long long generalXYMask;
 
 };
 

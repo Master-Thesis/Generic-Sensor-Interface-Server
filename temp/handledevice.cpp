@@ -71,7 +71,7 @@ void HandleDevice::handleIt(RAWINPUT *raw)
 
     if(myString.contains("HID"))
     {
-        int index = myString.indexOf("VID");
+        int index = myString.toLower().indexOf("vid");
         QString VID = "0000";
         VID[0] = '0';
         VID[1] = 'x';
@@ -87,7 +87,7 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         else i = VID.toInt();
         VendorID = i;
 
-        index = myString.indexOf("PID");
+        index = myString.toLower().indexOf("pid");
         QString PID = "0000";
         PID[0] = '0';
         PID[1] = 'x';
@@ -104,13 +104,13 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         ProductID = i;
     }
 
-    unsigned long int dwKeystate;
-    unsigned long waarde;
+    unsigned long long dwKeystate;
+    unsigned long long waarde;
 
     switch (raw->header.dwType)
     {
     case RIM_TYPEHID:
-        dwKeystate = *reinterpret_cast<unsigned long *>(&raw->data.hid.bRawData);
+        dwKeystate = *reinterpret_cast<unsigned long long *>(&raw->data.hid.bRawData);
         break;
     case RIM_TYPEMOUSE:
         break;
@@ -118,6 +118,8 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         dwKeystate = raw->data.keyboard.VKey;
         break;
     }
+
+    qDebug() << QString::number(dwKeystate,16);
 
     int size2 = UsableControllers::getList().size();
     int i = 0;
@@ -131,54 +133,105 @@ void HandleDevice::handleIt(RAWINPUT *raw)
             QString nrContr;
             nrContr = nrContr.setNum(i);
             message += nrContr;
+
             int k = 0;
-            QString nr;
-            nr = nr.setNum(k);
+            while(k<UsableControllers::getList()[i].getSensorXYList().size()){
+                QString nr;
+                nr = nr.setNum(k);
 
-            switch (raw->header.dwType)
-            {
-            case RIM_TYPEHID:
-                    waarde = UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask() & dwKeystate; //voor thrustmaster
-                    break;
-            case RIM_TYPEMOUSE:
-                    break;
-            case RIM_TYPEKEYBOARD:
-                    waarde = raw->data.keyboard.VKey;
-                    break;
+                switch (raw->header.dwType)
+                {
+                case RIM_TYPEHID:
+                        waarde = UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask() & dwKeystate; //voor thrustmaster
+                        //qDebug() << QString::number(UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask(),16);
+                        //qDebug() << QString::number(waarde,16);
+                        //qDebug() << "________________" ;
+                        break;
+                case RIM_TYPEMOUSE:
+                        break;
+                case RIM_TYPEKEYBOARD:
+                        waarde = raw->data.keyboard.VKey;
+                        break;
+                }
+
+                //test if we have axis or buttons
+                if(UsableControllers::getList()[i].getSensorXYList()[k].getFixed()){
+                    //fixed buttons
+                    unsigned int up = UsableControllers::getList()[i].getSensorXYList()[k].getUp();
+                    unsigned int down = UsableControllers::getList()[i].getSensorXYList()[k].getDown();
+                    unsigned int left = UsableControllers::getList()[i].getSensorXYList()[k].getLeft();
+                    unsigned int right = UsableControllers::getList()[i].getSensorXYList()[k].getRight();
+                    unsigned int upLeft;
+                    unsigned int upRight;
+                    unsigned int downLeft;
+                    unsigned int downRight;
+
+                    if(UsableControllers::getList()[i].getSensorXYList()[k].getNumberOfButtons() == 4 && raw->header.dwType == RIM_TYPEHID)
+                    {
+                        upLeft = up|left;
+                        upRight = up|right;
+                        downLeft = down|left;
+                        downRight = down|right;
+                    }
+                    else if(UsableControllers::getList()[i].getSensorXYList()[k].getNumberOfButtons() == 8)
+                    {
+                        upLeft = UsableControllers::getList()[i].getSensorXYList()[k].getUpLeft();
+                        upRight = UsableControllers::getList()[i].getSensorXYList()[k].getUpRight();
+                        downLeft = UsableControllers::getList()[i].getSensorXYList()[k].getDownLeft();
+                        downRight = UsableControllers::getList()[i].getSensorXYList()[k].getDownRight();
+                    }
+
+                    if(up == waarde){message += " Up" + nr;}
+                    if(down == waarde){message += " Down" + nr;}
+                    if(left == waarde){message += " Left" + nr;}
+                    if(right == waarde){message += " Right" + nr;}
+                    if(upLeft == waarde){message += " Up" + nr + " Left" + nr;}
+                    if(upRight == waarde){message += " Up" + nr + " Right" + nr;}
+                    if(downLeft == waarde){message += " Down" + nr + " Left" + nr;}
+                    if(downRight == waarde){message += " Down" + nr + " Right" + nr;}
+
+
+                }
+                else{
+                //XY-axis
+
+                    signed long long valueX = UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask() & waarde;
+                    //qDebug() << "waarde " << waarde;
+                    //qDebug() << QString::number(UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask(), 16);
+                    //qDebug() << "voor delen X" << nr << " " << QString::number(valueX, 16);
+                    valueX /= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask()/0xff);
+                    if(valueX > UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()){
+                        valueX -= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()-UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStart() + 1);
+                        qDebug() << "start " << UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStart();
+                        qDebug() << "valueX " << valueX;
+                    }
+                    QString valX;
+                    valX = valX.setNum(valueX);
+                    //qDebug() << "X" << nr << " " << QString::number(valueX, 16);
+                    message += " X" + nr + "_" + valX;
+
+                    //Y-axis
+                    long long valueY = UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getMask() & waarde;
+
+                    //qDebug() << QString::number(UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask(), 16);
+                    valueY /= (UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getMask()/0xff);
+//                    if(valueY > UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStop()){
+//                        valueY -= (UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStop()-UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStart() + 1);
+//                        qDebug() << "start " << UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStart();
+//                        qDebug() << "valueX " << valueY;
+//                    }
+                    if(valueY > 127){
+                        valueY = valueY - 2 * 128;}
+                    qDebug() << "valueY " << valueY;
+                    QString valY;
+                    valY = valY.setNum(valueY);
+                    //qDebug() << "X" << nr << " " << QString::number(valueX, 16);
+                    message += " Y" + nr + "_" + valY;
+
+
+                }
+                k++;
             }
-
-            unsigned int up = UsableControllers::getList()[i].getSensorXYList()[k].getUp();
-            unsigned int down = UsableControllers::getList()[i].getSensorXYList()[k].getDown();
-            unsigned int left = UsableControllers::getList()[i].getSensorXYList()[k].getLeft();
-            unsigned int right = UsableControllers::getList()[i].getSensorXYList()[k].getRight();
-            unsigned int upLeft;
-            unsigned int upRight;
-            unsigned int downLeft;
-            unsigned int downRight;
-
-            if(UsableControllers::getList()[i].getSensorXYList()[k].getNumberOfButtons() == 4 && raw->header.dwType == RIM_TYPEHID)
-            {
-                upLeft = up|left;
-                upRight = up|right;
-                downLeft = down|left;
-                downRight = down|right;
-            }
-            else if(UsableControllers::getList()[i].getSensorXYList()[k].getNumberOfButtons() == 8)
-            {
-                upLeft = UsableControllers::getList()[i].getSensorXYList()[k].getUpLeft();
-                upRight = UsableControllers::getList()[i].getSensorXYList()[k].getUpRight();
-                downLeft = UsableControllers::getList()[i].getSensorXYList()[k].getDownLeft();
-                downRight = UsableControllers::getList()[i].getSensorXYList()[k].getDownRight();
-            }
-
-            if(up == waarde){message += " Up" + nr;}
-            if(down == waarde){message += " Down" + nr;}
-            if(left == waarde){message += " Left" + nr;}
-            if(right == waarde){message += " Right" + nr;}
-            if(upLeft == waarde){message += " Up" + nr + " Left" + nr;}
-            if(upRight == waarde){message += " Up" + nr + " Right" + nr;}
-            if(downLeft == waarde){message += " Dow" + nr + " Left" + nr;}
-            if(downRight == waarde){message += " Down" + nr + " Right" + nr;}
 
             if(raw->header.dwType == RIM_TYPEHID)
             {
@@ -206,10 +259,13 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                     j++;
                 }
             }
-        }
+
+}
         i++;
     }
-
-    qDebug() << message;
-    emit buttonAction(message);
+    if(message != ""){
+        qDebug() << message;
+        emit buttonAction(message);
+    }
 }
+

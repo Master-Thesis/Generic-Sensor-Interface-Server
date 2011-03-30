@@ -1,7 +1,7 @@
 #ifndef ALLCONNECTED_H
 #define ALLCONNECTED_H
 
-#include "connectedDevice.h"
+#include "connecteddevice.h"
 #include <QList>
 
 #if (_WIN32_WINNT < 0x0501)
@@ -40,7 +40,7 @@ class AllConnected
 public:
     AllConnected();
     QList<connectedDevice> getAllConnectedList(){return connected;}
-    unsigned long int ConvertStringToHex(QString hexVal);
+    unsigned long long ConvertStringToHex(QString hexVal);
 
 private:
     void ListAllInfo();
