@@ -45,7 +45,7 @@ extern "C" {
 #include <windows.h>
 #include <mmreg.h>		// for WAVEFORMATEXTENSIBLE
 #include <mmsystem.h>	// for timeGetTime()
-
+#include "temp/usablecontrollers.h"
 // apparently not defined in some compilers:
 #ifndef min
 # define min(a,b)	(((a) < (b)) ? (a) : (b))
@@ -1306,7 +1306,34 @@ int wiimote::ParseAccel (BYTE* buff)
 
 	BYTE raw_y = buff[4];
 	BYTE raw_z = buff[5];
-        qDebug() << "X: " << raw_x << "\tY: " << raw_y << "\tZ: " << raw_z;
+        QString stateMessage;
+        QString valX;
+        valX = valX.setNum(raw_x);
+        QString valY;
+        valY = valY.setNum(raw_y);
+        QString valZ;
+        valZ = valZ.setNum(raw_z);
+        int i =0;
+        int size2 = UsableControllers::getList().size();
+        while(i < size2)
+        {
+            int vendor = 0x057e;
+            int product = 0x0306;
+            if(UsableControllers::getList()[i].getVendorID() == vendor && UsableControllers::getList()[i].getProductID() == product)
+            {
+                QString nrContr;
+                nrContr = nrContr.setNum(i);
+                stateMessage += nrContr + " ";
+            }
+            //qDebug() << i;
+            i++;
+        }
+        stateMessage += "VX0_" + valX + " VY0_" + valY + " VZ0_" + valZ;
+
+        //connect(this,SIGNAL(accelAction(QString)), Mapper::instance(), SLOT(checkActions(QString)));
+        //qDebug() << stateMessage;
+        emit accelAction(stateMessage);
+        //qDebug() << "X: " << raw_x << "\tY: " << raw_y << "\tZ: " << raw_z;
 
 	if((raw_x != Internal.Acceleration.RawX) ||
 	   (raw_y != Internal.Acceleration.RawY) ||

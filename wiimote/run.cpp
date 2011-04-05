@@ -4,7 +4,12 @@
 #include <mmsystem.h>
 #include "wiimote.h"
 #include <QtGui/QApplication>
+#include <mapper.h>
 //#include "wmainwindow.h"
+//#include <QMutex>
+//static QMutex mutex;
+
+//Run* Run::m_mapper = 0;
 
 void on_state_change (wiimote			  &remote,
                                           state_change_flags  changed,
@@ -90,11 +95,35 @@ void on_state_change (wiimote			  &remote,
 
 Run::Run( QObject *parent) : QThread(parent)
 {
+    connect(this,SIGNAL(sendActionWii(QString)), Mapper::instance(), SLOT(checkActions(QString)));
 
+}
+
+//Run* Run::instance()
+//{
+//    if(!m_mapper)
+//    {
+//        mutex.lock();
+
+//        if(!m_mapper)
+//            m_mapper = new Run();
+
+//        mutex.unlock();
+//    }
+
+//    return m_mapper;
+//}
+
+void Run::actionWii(QString act){
+    //qDebug() << "Wii";
+    emit sendActionWii(act);
 }
 
 void Run::run(){
     wiimote remote;
+
+
+    connect(&remote,SIGNAL(accelAction(QString)), this, SLOT(actionWii(QString)));
 
     remote.ChangedCallback		= on_state_change;
     //  notify us only when the wiimote connected sucessfully, or something
@@ -103,7 +132,7 @@ void Run::run(){
                                                                                                        EXTENSION_CHANGED |
                                                                                                        MOTIONPLUS_CHANGED);
 reconnect:
-    COORD pos = { 0, 6 };
+    //COORD pos = { 0, 6 };
     //SetConsoleCursorPosition(console, pos);
 
     // try to connect the first available wiimote in the system
@@ -175,10 +204,10 @@ reconnect:
    // _tprintf(_T("\r  -- TRY: B = rumble, A = square, 1 = sine, 2 = daisy, Home = Exit --\n"));
 
     // (stuff for animations)
-    DWORD	 last_rumble_time = timeGetTime(); // for rumble text animation
-    DWORD    last_led_time    = timeGetTime(); // for led         animation
-    bool	 rumble_text	  = true;
-    unsigned lit_led          = 0;
+//    DWORD	 last_rumble_time = timeGetTime(); // for rumble text animation
+//    DWORD    last_led_time    = timeGetTime(); // for led         animation
+//    bool	 rumble_text	  = true;
+//    unsigned lit_led          = 0;
 
      //display the wiimote state data until 'Home' is pressed:
     while(!remote.Button.Home())// && !GetAsyncKeyState(VK_ESCAPE))
@@ -200,7 +229,7 @@ reconnect:
 //                                BLANK_LINE BLANK_LINE BLANK_LINE);
                     Beep(100, 1000);
                     Sleep(2000);
-                    COORD pos = { 0, 6 };
+                    //COORD pos = { 0, 6 };
                     //SetConsoleCursorPosition(console, pos);
                    // _tprintf(BLANK_LINE BLANK_LINE BLANK_LINE);
                     goto reconnect;

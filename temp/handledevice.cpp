@@ -1,6 +1,5 @@
 #include "handledevice.h"
 #include "usablecontrollers.h"
-
 #include <Windows.h>
 
 HandleDevice::HandleDevice(MSG *m, long *result, QObject *parent)
@@ -13,6 +12,7 @@ void HandleDevice::run()
     handleWinEvent(m, result);
 }
 
+// Handle WinEvent coming from the server-window
 void HandleDevice::handleWinEvent(MSG *m, long *result)
 {
     LPBYTE lpb;
@@ -63,6 +63,7 @@ void HandleDevice::handleIt(RAWINPUT *raw)
     if(GetRawInputDeviceInfo(raw->header.hDevice, RIDI_DEVICENAME, tBuffer, &size) < 0)
     {
         // Error in reading device name
+        return;
     }
 
     int VendorID;
@@ -81,11 +82,11 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         VID[5] = myString[index+7];
 
         VID.toLower();
-        int i = 0;
-        if ( VID.startsWith( "0x" ) ) i = VID.mid( 2 ).toInt( 0, 16 );
-        else if ( VID.startsWith( "0" ) ) i = VID.mid( 1 ).toInt( 0, 8 );
-        else i = VID.toInt();
-        VendorID = i;
+        VendorID = 0;
+        if(VID.startsWith("0x")){
+            VendorID = VID.mid(2).toInt(0,16);}
+        else{
+            VendorID = VID.toInt();}
 
         index = myString.toLower().indexOf("pid");
         QString PID = "0000";
@@ -97,35 +98,30 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         PID[5] = myString[index+7];
 
         PID.toLower();
-        i = 0;
-        if ( PID.startsWith( "0x" ) ) i = PID.mid( 2 ).toInt( 0, 16 );
-        else if ( PID.startsWith( "0" ) ) i = PID.mid( 1 ).toInt( 0, 8 );
-        else i = PID.toInt();
-        ProductID = i;
+        ProductID = 0;
+        if(PID.startsWith("0x")){
+            ProductID = PID.mid(2).toInt(0,16);}
+        else{
+            ProductID = PID.toInt();}
     }
 
-    unsigned long long dwKeystate;
-    unsigned long long waarde;
+    unsigned long long keyValue;
+    unsigned long long value;
 
     switch (raw->header.dwType)
     {
     case RIM_TYPEHID:
-        dwKeystate = *reinterpret_cast<unsigned long long *>(&raw->data.hid.bRawData);
+        keyValue = *reinterpret_cast<unsigned long long *>(&raw->data.hid.bRawData);
         break;
     case RIM_TYPEMOUSE:
         break;
     case RIM_TYPEKEYBOARD:
-        dwKeystate = raw->data.keyboard.VKey;
+        keyValue = raw->data.keyboard.VKey;
         break;
     }
-
-    // qDebug() << QString::number(dwKeystate,16);
-
-    int size2 = UsableControllers::getList().size();
-    int i = 0;
     QString message;
-
-    while(i < size2)
+    int i = 0;
+    while(i < UsableControllers::getList().size())
     {
         if(UsableControllers::getList()[i].getVendorID() == VendorID && UsableControllers::getList()[i].getProductID() == ProductID)
         {
@@ -137,17 +133,26 @@ void HandleDevice::handleIt(RAWINPUT *raw)
             while(k<UsableControllers::getList()[i].getSensorXYList().size()){
                 QString nr;
                 nr = nr.setNum(k);
-
+                bool pressed = true;
                 switch (raw->header.dwType)
                 {
                 case RIM_TYPEHID:
-                        waarde = UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask() & dwKeystate; //voor thrustmaster
-                        break;
+                    // value after using bitmask
+                    value = UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask() & keyValue;
+                    break;
                 case RIM_TYPEMOUSE:
-                        break;
+                    break;
                 case RIM_TYPEKEYBOARD:
-                        waarde = raw->data.keyboard.VKey;
-                        break;
+                    value = raw->data.keyboard.VKey;
+
+                    // Check if press or release
+                    if(raw->data.keyboard.Flags == 3 || raw->data.keyboard.Flags == 1){
+                        pressed = false;
+                    }
+                    break;
+                }
+                if(!pressed){
+                    return;
                 }
 
                 //test if we have axis or buttons
@@ -177,49 +182,48 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                         downRight = UsableControllers::getList()[i].getSensorXYList()[k].getDownRight();
                     }
 
-                    if(up == waarde){message += " Up" + nr;}
-                    if(down == waarde){message += " Down" + nr;}
-                    if(left == waarde){message += " Left" + nr;}
-                    if(right == waarde){message += " Right" + nr;}
-                    if(upLeft == waarde){message += " Up" + nr + " Left" + nr;}
-                    if(upRight == waarde){message += " Up" + nr + " Right" + nr;}
-                    if(downLeft == waarde){message += " Down" + nr + " Left" + nr;}
-                    if(downRight == waarde){message += " Down" + nr + " Right" + nr;}
-
-
+                    if(up == value){message += " Up" + nr;}
+                    if(down == value){message += " Down" + nr;}
+                    if(left == value){message += " Left" + nr;}
+                    if(right == value){message += " Right" + nr;}
+                    if(upLeft == value){message += " Up" + nr + " Left" + nr;}
+                    if(upRight == value){message += " Up" + nr + " Right" + nr;}
+                    if(downLeft == value){message += " Down" + nr + " Left" + nr;}
+                    if(downRight == value){message += " Down" + nr + " Right" + nr;}
                 }
                 else{
-                //XY-axis
-
+                //XY-axis, because XY was not fixed
                     //X-axis
-                    signed long long valueX = UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask() & waarde;
+                    signed long long valueX = UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask() & value;
                     valueX /= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask()/0xff);
                     if(valueX > UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()){
                         valueX -= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()-UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStart() + 1);
                     }
                     QString valX;
                     valX = valX.setNum(valueX);
-                    message += " X" + nr + "_" + valX;
+                    message += " PX" + nr + "_" + valX;
 
                     //Y-axis
-                    long long valueY = UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getMask() & waarde;
+                    long long valueY = UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getMask() & value;
                     valueY /= (UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getMask()/0xff);
-//                    if(valueY > 127){
-//                        valueY = valueY - 2 * 128;}
+                    if(valueY > UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStop() && UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getFormat().toLower() == "signed"){
+                        valueY -= (UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStop()-UsableControllers::getList()[i].getSensorXYList()[k].getYAxis().getRangeStart() + 1);
+                    }
                     QString valY;
                     valY = valY.setNum(valueY);
-                    message += " Y" + nr + "_" + valY;
-}
+                    message += " PY" + nr + "_" + valY;
+                }
                 k++;
             }
 
+            // Check buttons
             if(raw->header.dwType == RIM_TYPEHID)
             {
                 int j = 0;
-                int waarde2 = UsableControllers::getList()[i].getGeneralButtonMask() & dwKeystate; //Thrustmaster
+                int value2 = UsableControllers::getList()[i].getGeneralButtonMask() & keyValue;
                 while(j < UsableControllers::getList()[i].getButtonList().size())
                 {
-                    if(UsableControllers::getList()[i].getButtonList()[j].getBitMaskPressed() & waarde2 )
+                    if(UsableControllers::getList()[i].getButtonList()[j].getBitMaskPressed() & value2 )
                     {
                         message += " " + UsableControllers::getList()[i].getButtonList()[j].getName();
                     }
@@ -229,24 +233,21 @@ void HandleDevice::handleIt(RAWINPUT *raw)
             else if(raw->header.dwType == RIM_TYPEKEYBOARD)
             {
                 int j = 0;
-                int waarde2 = raw->data.keyboard.VKey;
+                int value2 = raw->data.keyboard.VKey;
                 while(j<UsableControllers::getList()[i].getButtonList().size())
                 {
-                    if(UsableControllers::getList()[i].getButtonList()[j].getBitMaskPressed() == waarde2 )
+                    if(UsableControllers::getList()[i].getButtonList()[j].getBitMaskPressed() == value2 )
                     {
                         message += " " + UsableControllers::getList()[i].getButtonList()[j].getName();
                     }
                     j++;
                 }
             }
-
-}
+        }
         i++;
-
     }
     if(message != ""){
         qDebug() << message;
         emit buttonAction(message);
     }
 }
-

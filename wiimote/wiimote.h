@@ -7,7 +7,7 @@
 // _______________________________________________________________________________
 //
 //  wiimote.h  (tab = 4 spaces)
-
+#include <QObject>
 #ifdef _MSC_VER // VC
 # pragma once
 #endif
@@ -21,6 +21,7 @@
 #include <TCHAR.h>		// auto Unicode/Ansi support
 #include <queue>		// for HID write method
 #include <list>			// for state recording
+#include <QString>
  
 #ifndef QWORD
  typedef unsigned __int64 QWORD;
@@ -92,11 +93,15 @@ struct wiimote_state_event {
 
 // wiimote class - connects and manages a wiimote and its optional extensions
 //                 (Nunchuk/Classic Controller), and exposes their state
-class wiimote : public wiimote_state
+class wiimote : public QObject, public wiimote_state
 	{
+        Q_OBJECT
+
 	public:
 		wiimote ();
 		virtual ~wiimote ();
+        signals:
+            void accelAction(const QString stateMessage);
 
 	public:
 		// these can be used to identify Connect()ed wiimote objects (if both
@@ -494,6 +499,7 @@ volatile int	 MotionPlusDetectCount;		  // waiting for the result
 			unsigned		TriggerFlags;	// wiimote changes trigger a state event
 			unsigned		ExtTriggerFlags;// extension changes "
 			} Recording;
+
 	};
 
 #endif // _WIIMOTE_H

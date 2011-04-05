@@ -20,10 +20,12 @@
 
 #include "wiimote_common.h"
 #include "windows.h"
+#include <QObject>
 
 // wiimote_state (contains the Wiimote and Extension data and settings)
 struct wiimote_state
 	{
+
         friend class wiimote; // for Clear()
 
 	// calibration information (stored on the Wiimote)

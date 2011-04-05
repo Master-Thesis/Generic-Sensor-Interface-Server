@@ -19,6 +19,8 @@ public:
 
     //getters
     Axis getAxisX(){return x;}
+    Axis getAxisY(){return y;}
+    Axis getAxisZ(){return z;}
 
 private:
     //int numberOfXYZ;

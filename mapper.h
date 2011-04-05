@@ -5,6 +5,9 @@
 
 #include "temp/button.h"
 #include "temp/usablecontrollers.h"
+#include "temp/AxisFormatMapper.h"
+#include "temp/axisoutmapper.h"
+
 
 class Mapper : public QObject
 {
@@ -21,6 +24,8 @@ public:
     static bool tryDeviceDeselect(const int newDevice = -1);
     static bool tryKeyMap(const QString source, const QString target);
     static bool tryUndoKeyMap(const QString target);
+    static bool tryAxisMapToKey(const QString axisName, const int range, const QString target);
+    static bool tryAxisFormatMap(const QString axisName, const int ranges, const int start, const int end, const bool inverted);
 
 signals:
     void actionHappened(QString button);
@@ -37,6 +42,10 @@ private:
     static int controllerNo;
     static QList<QString> buttonList;
     static QList<QString> mappingList;
+    static QList<AxisFormatMapper> axisFormatMapList;
+    static QList<AxisOutMapper> axisOutMappingList;
+    float valueInNewRange(QChar type, QChar axis, int xyNr, int newStart, int newStop, float value );
+    float invertRange(float value);
 
 };
 

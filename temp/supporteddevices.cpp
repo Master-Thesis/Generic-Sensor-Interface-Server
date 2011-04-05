@@ -107,7 +107,7 @@ QList<Controller> SupportedDevices::findDevice(const int buttons, const int xy, 
     QList<Controller> con;
     int i = 0;
     while(i<devices.size()){
-        if((devices[i].getNumberOfButtons() > buttons) && (devices[i].getNumberOfXY() > xy)){
+        if((devices[i].getNumberOfButtons() >= buttons) && (devices[i].getNumberOfXY() >= xy)  && (devices[i].getNumberOfVectors() >= vector)){
             con.append(devices[i]);
         }
         i++;
@@ -122,9 +122,9 @@ QList<Controller> SupportedDevices::getDeviceWithString(const QString descriptio
     QStringList desList;
     desList = description.toLower().split(',');
     QStringList desList2;
-    int buttons;
-    int xy;
-    int vector;
+    int buttons = 0;
+    int xy = 0;
+    int vector = 0;
 
     int i = 0;
     while(i<desList.size()){
@@ -134,6 +134,9 @@ QList<Controller> SupportedDevices::getDeviceWithString(const QString descriptio
         }
         if(desList2.at(0) == "p"){
             xy = desList2.at(1).toInt();
+        }
+        if(desList2.at(0) == "v"){
+            vector = desList2.at(1).toInt();
         }
         i++;
     }

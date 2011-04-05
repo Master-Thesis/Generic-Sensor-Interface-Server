@@ -7,12 +7,15 @@
 #include "mapper.h"
 #include "server.h"
 #include "temp/handledevice.h"
+#include "wiimote/run.h"
 
 
 Server::Server(QWidget *parent) :
     QDialog(parent)
 {
+
     InitRawInput();
+
 
     statusLabel = new QLabel(tr("Click 'Start' to start the UDP server"));
 

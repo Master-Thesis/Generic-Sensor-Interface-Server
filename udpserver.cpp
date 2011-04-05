@@ -212,6 +212,7 @@ void UDPServer::supportedDevices(const QString cmd)
     QMap<QString, int> map;
     QString cmdStr;
     QString methodString;
+    qDebug() << "cmd" << cmd;
 
     QStringList cmdList;
     cmdList = cmd.split(' ');

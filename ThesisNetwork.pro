@@ -60,7 +60,9 @@ HEADERS += \
     wiimote/run.h \
     temp/vector.h \
     temp/axis.h \
-    temp/supporteddevices.h
+    temp/supporteddevices.h \
+    temp/axisoutmapper.h \
+    temp/AxisFormatMapper.h
 
 
 #DEFINES += _WIN32_WINNT="0x0501"
@@ -69,7 +71,7 @@ HEADERS += \
 LIBS += libsetupapi \
     libhid \
     libuser32
-#INCLUDEPATH += "C:\\Qt\\2010.05\\mingw\\include" \
+INCLUDEPATH += "C:\\Qt\\2010.05\\mingw\\include" \
 
 LIBS +=  -luser32 -L"C:\\Dev\\Qt\\2010.05\\mingw\\lib"
 
