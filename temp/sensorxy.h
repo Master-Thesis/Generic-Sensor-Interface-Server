@@ -52,7 +52,7 @@ public:
     const unsigned long long getGeneralXYMask() {return generalXYMask;}
     const bool getFixed() {return fixedValue;}
 
-    QByteArray printInfo() const;
+    QByteArray printInfo(int nr) const;
     QByteArray printInfoDetails() const;
 
 private:

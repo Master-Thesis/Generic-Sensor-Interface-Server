@@ -247,7 +247,7 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         i++;
     }
     if(message != ""){
-        qDebug() << message;
+        //qDebug() << message;
         emit buttonAction(message);
     }
 }

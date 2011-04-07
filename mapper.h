@@ -46,6 +46,7 @@ private:
     static QList<AxisOutMapper> axisOutMappingList;
     float valueInNewRange(QChar type, QChar axis, int xyNr, int newStart, int newStop, float value );
     float invertRange(float value);
+    bool move;
 
 };
 

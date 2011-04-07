@@ -125,6 +125,7 @@ HMODULE		   wiimote::HidDLL				  = NULL;
 unsigned	   wiimote::_TotalCreated		  = 0;
 unsigned	   wiimote::_TotalConnected		  = 0;
 hidwrite_ptr   wiimote::_HidD_SetOutputReport = NULL;
+int age;
 
 // (keep in sync with 'speaker_freq'):
 const unsigned wiimote::FreqLookup [TOTAL_FREQUENCIES] = 
@@ -1247,6 +1248,8 @@ bool wiimote::EstimateOrientationFrom (wiimote_state::acceleration &accel)
 		accel.Orientation.Y = y;
 		accel.Orientation.Z = z;
 
+                //qDebug() << "or x" << x;
+
 		// and extract pitch & roll from them:
 		// (may not be optimal)
 		float pitch = -asin(y)    * 57.2957795f;
@@ -1272,6 +1275,7 @@ bool wiimote::EstimateOrientationFrom (wiimote_state::acceleration &accel)
 	WiimoteNearGUpdates	= 0;
 	// age the last orientation update
 	accel.Orientation.UpdateAge++;
+        age = accel.Orientation.UpdateAge;
 	return false;
 	}
 // ------------------------------------------------------------------------------------
@@ -1313,6 +1317,8 @@ int wiimote::ParseAccel (BYTE* buff)
         valY = valY.setNum(raw_y);
         QString valZ;
         valZ = valZ.setNum(raw_z);
+        QString valAge;
+        valAge = valAge.setNum(age);
         int i =0;
         int size2 = UsableControllers::getList().size();
         while(i < size2)
@@ -1328,11 +1334,16 @@ int wiimote::ParseAccel (BYTE* buff)
             //qDebug() << i;
             i++;
         }
-        stateMessage += "VX0_" + valX + " VY0_" + valY + " VZ0_" + valZ;
-
+        stateMessage += "age_" + valAge + " VX0_" + valX + " VY0_" + valY + " VZ0_" + valZ;
+        //qDebug() << "age" << age;
         //connect(this,SIGNAL(accelAction(QString)), Mapper::instance(), SLOT(checkActions(QString)));
         //qDebug() << stateMessage;
+        //if(age <=12){
+            //qDebug() << "update" << accel.Orientation.UpdateAge;
         emit accelAction(stateMessage);
+
+        //}
+
         //qDebug() << "X: " << raw_x << "\tY: " << raw_y << "\tZ: " << raw_z;
 
 	if((raw_x != Internal.Acceleration.RawX) ||
@@ -1362,6 +1373,7 @@ int wiimote::ParseAccel (BYTE* buff)
 		Internal.Acceleration.Y =
 		Internal.Acceleration.Z = 0.f;
 		}
+        //qDebug() << "X:" << Internal.Acceleration.X;
 
 	// see if we can estimate the orientation from the current values
 	if(EstimateOrientationFrom(Internal.Acceleration))
@@ -1490,6 +1502,8 @@ int wiimote::ParseExtension (BYTE *buff, unsigned offset)
 			accel.X = ((float)raw_x - calib.X0) / ((float)calib.XG - calib.X0);
 			accel.Y = ((float)raw_y - calib.Y0) / ((float)calib.YG - calib.Y0);
 			accel.Z = ((float)raw_z - calib.Z0) / ((float)calib.ZG - calib.Z0);
+
+                        qDebug() << "accel.X" << accel.X;
 
 			// try to extract orientation from the accel:
 			if(EstimateOrientationFrom(accel))

@@ -24,41 +24,7 @@ Mapper::Mapper(QObject *parent) :
     QObject(parent)
 {
     controllerNo = -1;
-
-    //om te testen
-    AxisFormatMapper a;
-    a.setAxisName("vx0");
-    a.setNumberOfRanges(7);
-    a.setRangeStart(0);
-    a.setRangeEnd(255);
-    a.setInverted(false);
-    axisFormatMapList.append(a);
-
-    AxisFormatMapper b;
-    b.setAxisName("px2");
-    b.setNumberOfRanges(1);
-    b.setRangeStart(0);
-    b.setRangeEnd(100);
-    b.setInverted(false);
-    axisFormatMapList.append(b);
-
-    AxisOutMapper m;
-    m.setAction("tetrixleft");
-    m.setAxis('x');
-    m.setRangeNr(0);
-    m.setXYnr(0);
-    m.setType('v');
-    axisOutMappingList.append(m);
-    //tryAxisMapToKey("vz1", 0, "tetrixleft");
-
-    AxisOutMapper n;
-    n.setAction("tetrixright");
-    n.setAxis('x');
-    n.setRangeNr(6);
-    n.setXYnr(0);
-    n.setType('v');
-    axisOutMappingList.append(n);
-
+    move = false;
 
     //controllers = new ConnectedSupportedControllers;
 
@@ -124,9 +90,23 @@ bool Mapper::tryDeviceSelect(const int deviceNo)
     for(int i = 0; i <  buttonSize; i++)
         buttonList << UsableControllers::getList()[controllerNo].getButtonList()[i].getName().toLower();
 
+
     int xySize = UsableControllers::getList()[controllerNo].getNumberOfXY();
-    for(int i = 0; i < xySize; i++)
-        buttonList << ("up" + QString::number(i)) << ("down" + QString::number(i)) << ("left" + QString::number(i)) << ("right" + QString::number(i));
+    for(int i = 0; i < xySize; i++){
+        // XY Buttons
+        if(UsableControllers::getList()[controllerNo].getSensorXYList()[i].getFixed()){
+            buttonList << ("up" + QString::number(i)) << ("down" + QString::number(i)) << ("left" + QString::number(i)) << ("right" + QString::number(i));
+        }
+        // XY Axis
+        else{
+            buttonList << ("px" + QString::number(i)) << ("py" + QString::number(i));
+        }
+    }
+
+    int vectorSize = UsableControllers::getList()[controllerNo].getVectorList().size();
+    for(int i = 0; i < vectorSize; i++){
+        buttonList << ("vx" + QString::number(i)) << ("vy" + QString::number(i)) << ("vz" + QString::number(i));
+    }
 
     //buttonList.reserve(buttonSize + (xySize * 4));
     Mapper::instance()->initQStringList(mappingList, buttonList.size());
@@ -173,7 +153,7 @@ bool Mapper::tryKeyMap(const QString source, const QString target)
 
 
 
-bool Mapper::tryAxisMapToKey(const QString axisName, const int range, const QString target) // axisName heeft formaat "PX1"
+bool Mapper::tryAxisMapToKey(const QString axisName, const int range, const QString target) // axisName has format "PX1"
 {
     bool status = false;
     // if no controller selected or the buttonlist is not filled -> return
@@ -366,6 +346,7 @@ void Mapper::checkActions(const QString actions)
     // Check if there are actions for some Axis values
     for(int i = 0; i < actionList.size(); i++){
         QString axisData = actionList[i].toLower();
+        int age;
 
         int j = 0;
         // Check the List with Format Changes
@@ -373,12 +354,25 @@ void Mapper::checkActions(const QString actions)
             QChar type = axisData[0]; // type (p = position, v = vector)
             QChar axis = axisData[1]; // axisname (x or y or z)
             if(axisData.contains('_')){
+
+                // Check age (for Wiimote: when a movement is made, block emitting other actions untill position is neutral)
+                if(axisData.contains("age_")){
+                    QStringList axisList;
+                    axisList = axisData.split('_'); // split (axis name + nr) from it's value
+                    age = axisList[1].toInt();
+                    if(age <= 2){
+                        move = false;
+                    }
+                }
+
+
                 if(type == 'p' || type == 'v'){
                     if(axis == 'x' || axis == 'y' || axis == 'z'){
                         QStringList axisList;
                         axisList = axisData.split('_'); // split (axis name + nr) from it's value
                         QString axisName = axisList[0];
                         float value = axisList[1].toInt();
+
                         // inverted?
                         if(axisFormatMapList[j].isInverted()){
                             value = invertRange(value);
@@ -387,7 +381,22 @@ void Mapper::checkActions(const QString actions)
                         int xy = xyNr.toInt(); // in case of a vector this is the vectorNr
 
                         // change te value to the mapped format
-                        value = valueInNewRange(type, axis, xy, axisFormatMapList[j].getRangeStart(), axisFormatMapList[j].getRangeEnd(), value);
+                        value = (int) valueInNewRange(type, axis, xy, axisFormatMapList[j].getRangeStart(), axisFormatMapList[j].getRangeEnd(), value);
+
+                        qDebug() << type << axis << xy << value;
+                        if(buttonList.contains(axisName))
+                        {
+                            QString valueString;
+                            valueString = valueString.setNum(value);
+
+                            action = mappingList.at(buttonList.indexOf(axisName));
+                            if(action.size() > 0){
+                                action += "_" + valueString;
+                                emit actionHappened(action);
+
+                            }
+                            //qDebug() << "Mapper: button action emitted";
+                        }
 
                         // Is there a change in value?
                         if((axisName == axisFormatMapList[j].getAxisName()) && (value != axisFormatMapList[j].getLastValue())){
@@ -395,19 +404,27 @@ void Mapper::checkActions(const QString actions)
                             float div = (axisFormatMapList[j].getRangeEnd() - axisFormatMapList[j].getRangeStart())/axisFormatMapList[j].getNumberOfRanges();
                             if(axisFormatMapList[j].getNumberOfRanges() > 1){
                                 float k = 0;
+
                                 // What range?
                                 while(k < axisFormatMapList[j].getNumberOfRanges()){
                                     float value2 = axisFormatMapList[j].getRangeStart() + (k+1)*(div);
                                     if(value <= value2){
+
                                         // Change in range?
                                         if(axisFormatMapList[j].getLastRange() != k){
                                             axisFormatMapList[j].setLastRange(k);
                                             int l = 0;
+
                                             // Check the Output Mapping List
                                             while(l < axisOutMappingList.size()){
                                                 if(axisOutMappingList[l].getRangeNr() == k && xy == axisOutMappingList[l].getXYnr() && axis == axisOutMappingList[l].getAxis()){
-                                                    emit actionHappened(axisOutMappingList[l].getAction());
-                                                    qDebug() << "Mapper: axis action emitted";
+
+                                                    //if false, an action is possible by the Wiimote
+                                                    if(move == false){
+                                                        emit actionHappened(axisOutMappingList[l].getAction());
+                                                        qDebug() << "Mapper: axis action emitted";
+                                                        move = true;
+                                                    }
                                                     l = axisOutMappingList.size();
                                                 }
                                                 l++;

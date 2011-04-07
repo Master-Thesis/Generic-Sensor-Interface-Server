@@ -71,7 +71,7 @@ QByteArray Controller::printXYList()
     while(i < xySensors.size())
     {
         outStream << "\nList of XY" << i << "\n";
-        outStream << xySensors[i].printInfo();
+        outStream << xySensors[i].printInfo(i);
         i++;
     }
 
@@ -103,9 +103,10 @@ QByteArray Controller::printAll()
     QByteArray *outArray = new QByteArray();
     QTextStream outStream(outArray);
 
-    outStream << "Description:\t"   << description;
+    outStream << "Description:\t"   << description << "\n";
     outStream << printXYList();
     outStream << printButtonList();
+    outStream << printVectorList();
     outStream << "\n**********************************************";
 
     outStream.flush();
@@ -126,6 +127,23 @@ QByteArray Controller::printButtonInfo()
     //outStream << pressFlagValue;
     outStream << flagButtonPressed;
     outStream << printButtonList();
+
+    outStream.flush();
+    return *outArray;
+}
+
+QByteArray Controller::printVectorList()
+{
+    QByteArray *outArray = new QByteArray();
+    QTextStream outStream(outArray);
+
+    int i = 0;
+    while(i < vectors.size())
+    {
+        outStream << "\nList of Vector" << i << "\n";
+        outStream << vectors[i].printInfo(i);
+        i++;
+    }
 
     outStream.flush();
     return *outArray;

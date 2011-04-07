@@ -73,6 +73,7 @@ public:
         QByteArray printButtonInfo();
         QByteArray printButtonList();
         QByteArray printButtonListDetails();
+        QByteArray printVectorList();
 
         // Other Functions
         void addButton(Button);

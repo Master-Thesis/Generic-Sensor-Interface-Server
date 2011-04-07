@@ -30,27 +30,32 @@ QByteArray SensorXY::printInfoDetails() const
     return *outArray;
 }
 
-QByteArray SensorXY::printInfo() const
+QByteArray SensorXY::printInfo(int nr) const
 {
     QByteArray *outArray = new QByteArray();
     QTextStream outStream(outArray);
 
-    if(numberOfButtons == 4){
-        outStream << "Up\n";
-        outStream << "Down\n";
-        outStream << "Left\n";
-        outStream << "Right\n";
+    //if(numberOfButtons == 4){
+    if(fixedValue){
+        outStream << "\tUp" << nr << "\n";
+        outStream << "\tDown" << nr << "\n";
+        outStream << "\tLeft" << nr << "\n";
+        outStream << "\tRight" << nr << "\n";
     }
-    else if(numberOfButtons == 8){
-        outStream << "Up\n";
-        outStream << "Down\n";
-        outStream << "Left\n";
-        outStream << "Right\n";
-        outStream << "\nUp Left\n";
-        outStream << "Down Left\n";
-        outStream << "Up Right\n";
-        outStream << "Down Right\n";
+    else{
+        outStream << "\tPX" << nr << "\n";
+        outStream << "\tPY" << nr << "\n";
     }
+//    else if(numberOfButtons == 8){
+//        outStream << "Up\n";
+//        outStream << "Down\n";
+//        outStream << "Left\n";
+//        outStream << "Right\n";
+//        outStream << "\nUp Left\n";
+//        outStream << "Down Left\n";
+//        outStream << "Up Right\n";
+//        outStream << "Down Right\n";
+//    }
 
     outStream.flush();
     return *outArray;

@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <iostream>
+#include <QDebug>
 #include <QString>
 #include "axis.h"
 
@@ -21,6 +23,8 @@ public:
     Axis getAxisX(){return x;}
     Axis getAxisY(){return y;}
     Axis getAxisZ(){return z;}
+
+    QByteArray printInfo(int nr) const;
 
 private:
     //int numberOfXYZ;
