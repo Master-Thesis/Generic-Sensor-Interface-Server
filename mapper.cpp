@@ -23,7 +23,7 @@ QList<AxisOutMapper> Mapper::axisOutMappingList; //To Map a Range to a specific 
 Mapper::Mapper(QObject *parent) :
     QObject(parent)
 {
-    controllerNo = -1;
+    controllerNo = 2;
     move = false;
 
     //controllers = new ConnectedSupportedControllers;
@@ -143,6 +143,45 @@ bool Mapper::tryKeyMap(const QString source, const QString target)
 
     if (mappingList.contains(target.toLower()) || !mappingList.value(index).isEmpty())
         return status;
+
+    if((source[0] == 'p' || source[0] == 'v') && (source[1] == 'x' || (source[1] == 'y') || (source[1] == 'z')) ){
+        // Is the format already mapped? If not, use standard values
+        int j = 0;
+        bool mapped = false;
+        while(j < axisFormatMapList.size()){
+            if(axisFormatMapList[j].getAxisName() == source){
+                mapped = true;
+            }
+            j++;
+        }
+        if(!mapped){
+            Axis ax;
+            int xy = source[2].isNumber();
+            if(source[0] == 'p' and source[1] == 'x'){
+                ax = UsableControllers::getList()[controllerNo].getSensorXYList()[xy].getXAxis();
+            }
+            else if(source[0] == 'p' and source[1] == 'y'){
+                ax = UsableControllers::getList()[controllerNo].getSensorXYList()[xy].getYAxis();
+            }
+            else if(source[0] == 'v' and source[1] == 'x'){
+                ax = UsableControllers::getList()[controllerNo].getVectorList()[xy].getAxisX();
+            }
+            else if(source[0] == 'v' and source[1] == 'y'){
+                ax = UsableControllers::getList()[controllerNo].getVectorList()[xy].getAxisY();
+            }
+            else if(source[0] == 'v' and source[1] == 'z'){
+                ax = UsableControllers::getList()[controllerNo].getVectorList()[xy].getAxisZ();
+            }
+
+            AxisFormatMapper a;
+            a.setAxisName(source);
+            a.setNumberOfRanges(1);
+            a.setRangeStart(ax.getRangeStart());
+            a.setRangeEnd(ax.getRangeStop());
+            a.setInverted(false);
+            axisFormatMapList.append(a);
+        }
+    }
 
     // otherwise bind the key
     mappingList.replace(index, target.toLower());
@@ -383,7 +422,7 @@ void Mapper::checkActions(const QString actions)
                         // change te value to the mapped format
                         value = (int) valueInNewRange(type, axis, xy, axisFormatMapList[j].getRangeStart(), axisFormatMapList[j].getRangeEnd(), value);
 
-                        qDebug() << type << axis << xy << value;
+                        //qDebug() << type << axis << xy << value;
                         if(buttonList.contains(axisName))
                         {
                             QString valueString;
