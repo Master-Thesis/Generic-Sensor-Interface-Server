@@ -1,7 +1,6 @@
 #include "udpserver.h"
 
 #include <QChar>
-#include "listdevices.h"
 #include "mapper.h"
 #include "nodesocket.h"
 
@@ -13,7 +12,9 @@ const QList<QString> UDPServer::COMMANDS  =  QList<QString>()
                                              << "lsbts"
                                              << "kmap"
                                              << "umap"
-                                             << "supdvs";
+                                             << "supdvs"
+                                             << "afmap"
+                                             << "akmap";
 
 UDPServer::UDPServer(bool useLocalHost, QObject *parent) :
     NodeSocket(useLocalHost, parent)
@@ -98,6 +99,14 @@ void UDPServer::handleDataRequest(QString data)
         qDebug() << "Supported devices command called";
         supportedDevices(cmd);
         break;
+    case 8: // Axis Format Map (afmap)
+        qDebug() << "Axis Format Map command called";
+        axisFormatMap(cmd);
+        break;
+    case 9: // Axis Key Map (akmap)
+        qDebug() << "Axis Key Map command called";
+        axisKeyMap(cmd);
+        break;
     default:
         qDebug() << "Command not recognised";
         QString reply = "10;";
@@ -135,6 +144,9 @@ void UDPServer::sendHelp()
     hlp += "KMAP\tBinds button to certain String\n";
     hlp += "UMAP\tUndo a bind of a certain button";
     hlp += "SUPDVS\tGenerates a numberd list of all supported devices (with extra parameters b, p and v if needed)";
+    hlp += "AFMAP\tMap a certain format to an axis ((String)axisName (int)ranges (int)start (int)end (bool)inverted)";
+    hlp += "AKMAP\tMap an axis to a certain String ((String)axisName (int)range (String)target)";
+
     sendDatagram(hlp.toLatin1());
 }
 
@@ -142,7 +154,6 @@ void UDPServer::sendDeviceList()
 {
     QString dvcs = "10;";
     dvcs += QString(UsableControllers::printAllShortList());
-    //dvcs += ListDevices().ListAllInfo();
     sendDatagram(dvcs.toLatin1());
 }
 
@@ -235,6 +246,46 @@ void UDPServer::supportedDevices(const QString cmd)
     qDebug() << "methodString: " << methodString;
 
     msg += SupportedDevices::instance()->printDevicesWithString(methodString);
+
+    sendDatagram(msg.toLatin1());
+}
+
+void UDPServer::axisFormatMap(const QString cmd)
+{
+    // tryAxisFormatMap(const QString axisName, const int ranges, const int start, const int end, const bool inverted)
+    QString msg = "10;";
+
+    // Process the cmd String
+    QString axisName = cmd.section(' ', 1, 1);
+    int ranges = cmd.section(' ', 2, 2).toInt();
+    int start = cmd.section(' ', 3, 3).toInt();
+    int end = cmd.section(' ', 4, 4).toInt();
+    QString invertedString = cmd.section(' ', 5, 5).toLower();
+
+    bool inverted = (invertedString == "inverted");
+
+    if(Mapper::instance()->tryAxisFormatMap(axisName, ranges, start, end, inverted))
+        msg += "Axis Format successfully mapped!";
+    else
+        msg += "Error: Axis Format was not mapped, please try again";
+
+    sendDatagram(msg.toLatin1());
+}
+
+void UDPServer::axisKeyMap(const QString cmd)
+{
+    // tryAxisMapToKey(const QString axisName, const int range, const QString target)
+    QString msg = "10;";
+
+    // Process the cmd String
+    QString source = cmd.section(' ', 1, 1);
+    int range = cmd.section(' ', 2, 2).toInt();
+    QString target = cmd.section(' ', 3, 3);
+
+    if(Mapper::instance()->tryAxisMapToKey(source, range, target))
+        msg += "Axis successfully mapped to key!";
+    else
+        msg += "Error: Axis was not mapped to key, please try again";
 
     sendDatagram(msg.toLatin1());
 }

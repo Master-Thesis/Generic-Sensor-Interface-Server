@@ -36,7 +36,10 @@ public slots:
 private:
     explicit Mapper(QObject *parent = 0);
     virtual ~Mapper();
+
     void initQStringList(QList<QString> &list, const int size);
+    float valueInNewRange(QChar type, QChar axis, int xyNr, int newStart, int newStop, float value );
+    float invertRange(float value);
 
     static Mapper *m_mapper;
     static int controllerNo;
@@ -44,8 +47,6 @@ private:
     static QList<QString> mappingList;
     static QList<AxisFormatMapper> axisFormatMapList;
     static QList<AxisOutMapper> axisOutMappingList;
-    float valueInNewRange(QChar type, QChar axis, int xyNr, int newStart, int newStop, float value );
-    float invertRange(float value);
     bool move;
 
 };

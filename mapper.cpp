@@ -23,14 +23,8 @@ QList<AxisOutMapper> Mapper::axisOutMappingList; //To Map a Range to a specific 
 Mapper::Mapper(QObject *parent) :
     QObject(parent)
 {
-    controllerNo = 2;
+    controllerNo = -1;
     move = false;
-
-    //controllers = new ConnectedSupportedControllers;
-
-    // TODO: Delete
-    //devices.reserve(10);
-    //devices = controllers->getAllConnectedSupportedList();
 }
 
 Mapper::~Mapper()
@@ -77,7 +71,6 @@ bool Mapper::tryDeviceSelect(const int deviceNo)
     controllerNo = deviceNo;
     status = true;
 
-    // TODO: Uncomment and implement
     if(deviceNo == -1)
     {
         while(!buttonList.isEmpty())
@@ -108,21 +101,10 @@ bool Mapper::tryDeviceSelect(const int deviceNo)
         buttonList << ("vx" + QString::number(i)) << ("vy" + QString::number(i)) << ("vz" + QString::number(i));
     }
 
-    //buttonList.reserve(buttonSize + (xySize * 4));
     Mapper::instance()->initQStringList(mappingList, buttonList.size());
 
     return status;
 }
-
-//bool Mapper::tryDeviceDeselect(const int newDevice)
-//{
-//    bool status = false;
-
-//    // if no device is selected
-//    status = tryDeviceSelect(newDevice);
-
-//    return status;
-//}
 
 bool Mapper::tryKeyMap(const QString source, const QString target)
 {
@@ -294,7 +276,8 @@ bool Mapper::tryAxisMapToKey(const QString axisName, const int range, const QStr
 // Try to make a mapping to change the output format of the axis: change total range, divide in ranges (if no discrete ranges are wanted, range = 1)
 // Possible to invert the output
 //
-bool Mapper::tryAxisFormatMap(const QString axisName, const int ranges, const int start, const int end, const bool inverted){
+bool Mapper::tryAxisFormatMap(const QString axisName, const int ranges, const int start, const int end, const bool inverted)
+{
 
     bool status = false;
 

@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QtNetwork>
 
-#include "listdevices.h"
 #include "temp/supporteddevices.h"
 #include "mapper.h"
 #include "nodesocket.h"
@@ -37,6 +36,8 @@ private:
     void mapKey(const QString cmd);
     void unmapKey(const QString cmd);
     void supportedDevices(const QString cmd);
+    void axisFormatMap(const QString cmd);
+    void axisKeyMap(const QString cmd);
 
     Mapper *mapper;
     static const QList<QString> COMMANDS;
