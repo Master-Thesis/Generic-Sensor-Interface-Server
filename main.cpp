@@ -13,8 +13,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-//    Run *thread = new Run(NULL);
-//    thread->start();
+    Run *thread = new Run(NULL);
+    thread->start();
 
     QApplication app(argc, argv);
 

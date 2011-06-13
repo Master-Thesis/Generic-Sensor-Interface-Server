@@ -27,7 +27,7 @@ Server::Server(QWidget *parent) :
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
 
     //UDPServer initialisation
-    udpServer = new UDPServer(this);
+    udpServer = new UDPServer(false, this);
     udpServer->setOtherNodePort(50001);
 
     connect(startButton, SIGNAL(clicked()), udpServer, SLOT(startSocket()));

@@ -3,6 +3,7 @@
 
 VectorSensor::VectorSensor()
 {
+    maskXYZ = 0;
 }
 
 QByteArray VectorSensor::printInfo(int nr) const

@@ -10,6 +10,7 @@ class VectorSensor
 {
 public:
     VectorSensor();
+    ~VectorSensor(){}
 
     //setters
     void setFormatXYZ(QString newFormat){formatXYZ = newFormat;}
@@ -23,11 +24,12 @@ public:
     Axis getAxisX(){return x;}
     Axis getAxisY(){return y;}
     Axis getAxisZ(){return z;}
+    unsigned long long getGeneralMaskXYZ(){return maskXYZ;}
 
+    //printing
     QByteArray printInfo(int nr) const;
 
 private:
-    //int numberOfXYZ;
     QString formatXYZ;
     int numberBytesXYZ;
     unsigned long long maskXYZ;

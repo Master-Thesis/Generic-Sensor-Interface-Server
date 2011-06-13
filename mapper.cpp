@@ -342,7 +342,7 @@ bool Mapper::tryUndoKeyMap(const QString target)
 // If the action has a binded button the signal is emitted
 void Mapper::checkActions(const QString actions)
 {
-    //qDebug() << "Mapper::checkActions, actions: " << actions;
+    qDebug() << "Mapper::checkActions, actions: " << actions;
     QString action;
     QStringList actionList;
     actionList = actions.split(' ');
