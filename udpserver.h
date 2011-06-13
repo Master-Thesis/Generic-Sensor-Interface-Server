@@ -21,13 +21,17 @@ public slots:
     void sendControllerAction(const QString action);
 
 signals:
-    void connected(bool);
+    void isConnected(bool);
+    void dataRequestReceived(QString);
     void dataAvailable(QString);
 
 private slots:
     void handleDataRequest(QString data);
 
 private:
+    void sendSYNACK();
+    void sendAME();
+
     void sendHelp();
     void sendDeviceList();
     void selectDevice(const QString cmd);
@@ -38,6 +42,8 @@ private:
     void supportedDevices(const QString cmd);
     void axisFormatMap(const QString cmd);
     void axisKeyMap(const QString cmd);
+
+    void processDatagram(const QByteArray &datagram);
 
     Mapper *mapper;
     static const QList<QString> COMMANDS;

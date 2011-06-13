@@ -13,12 +13,9 @@ public:
     ~SensorXY(){}
 
     QString getFormat() {return format;}
-    //int getRangeStart() {return startRange;}
-    //int getRangeStop() {return stopRange;}
 
+    //setters
     void setFormat(QString newFormat) {format = newFormat;}
-    //void setRangeStart(int newStart) {startRange = newStart;}
-    //void setRangeStop(int newStop) {stopRange = newStop;}
     void setUp(int newUp) {up = newUp;}
     void setDown(int newDown) {down = newDown;}
     void setLeft(int newLeft) {left = newLeft;}
@@ -35,7 +32,6 @@ public:
 
     void setXAxis(Axis newX){x = newX;}
     void setYAxis(Axis newY){y = newY;}
-
     Axis getXAxis(){return x;}
     Axis getYAxis(){return y;}
 

@@ -59,7 +59,6 @@ QList<Controller> SupportedDevices::openAll()
         XMLReader t;
         QString filePath = "c://xml/" + file;
         controller = t.OpenXMLFile(filePath);
-       // tempController->printAll();
         devices.append(controller);
 
     }
@@ -107,7 +106,7 @@ QList<Controller> SupportedDevices::findDevice(const int buttons, const int xy, 
     QList<Controller> con;
     int i = 0;
     while(i<devices.size()){
-        if((devices[i].getNumberOfButtons() >= buttons) && (devices[i].getNumberOfXY() >= xy)  && (devices[i].getNumberOfVectors() >= vector)){
+        if((devices[i].getButtonList().size() >= buttons) && (devices[i].getSensorXYList().size() >= xy)  && (devices[i].getVectorList().size() >= vector)){
             con.append(devices[i]);
         }
         i++;

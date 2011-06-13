@@ -251,9 +251,9 @@ wiimote::~wiimote ()
 bool wiimote::Connect (unsigned wiimote_index, bool force_hidwrites)
 	{
 	if(wiimote_index == FIRST_AVAILABLE)
-                qDebug() << "Connecting first available Wiimote:";
+                ;//qDebug() << "Connecting first available Wiimote:";
 	else
-                qDebug() << "Connecting Wiimote %u:" << wiimote_index;
+                ;//qDebug() << "Connecting Wiimote %u:" << wiimote_index;
 
 	// auto-disconnect if user is being naughty
 	if(IsConnected())
@@ -487,7 +487,7 @@ skip:
 			}
 		return true;
 		}
-        qDebug() << ".. connection failed.";
+        //qDebug() << ".. connection failed.";
 	return false;
 	}
 // ------------------------------------------------------------------------------------

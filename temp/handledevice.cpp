@@ -19,42 +19,34 @@ void HandleDevice::handleWinEvent(MSG *m, long *result)
     UINT dwSize;
     RAWINPUT *raw;
     int msgType = m->message;
-    switch (msgType)
+
+    if (msgType == WM_INPUT)
     {
-    case WM_INPUT:
+        GetRawInputData((HRAWINPUT)m->lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+        lpb = (LPBYTE)malloc(sizeof(LPBYTE) * dwSize);
+
+        if (lpb == NULL)
+            printf("NULL\n");
+
+        if (GetRawInputData((HRAWINPUT)m->lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
+            printf("GetRawInputData doesn't return correct size !\n");
+
+        raw = (RAWINPUT*)lpb;
+
+        switch (raw->header.dwType)
         {
-            GetRawInputData((HRAWINPUT)m->lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+        case RIM_TYPEHID:
+            handleIt(raw);
+            break;
 
-            lpb = (LPBYTE)malloc(sizeof(LPBYTE) * dwSize);
-            if (lpb == NULL){
-                printf("NULL\n");
-            }
-            if (GetRawInputData((HRAWINPUT)m->lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize ){
-                printf("GetRawInputData doesn't return correct size !\n");
-            }
-            raw = (RAWINPUT*)lpb;
-            qDebug() << "Key";
-            switch (raw->header.dwType)
-            {
-            case RIM_TYPEHID:{
-                    handleIt(raw);
-                    qDebug() << "Key";
-                    break;
-                }
-            case RIM_TYPEMOUSE:
-                {
+        case RIM_TYPEKEYBOARD:
+            handleIt(raw);
+            break;
 
-                    return;
-                }
-            case RIM_TYPEKEYBOARD:{
-                    handleIt(raw);
-                    qDebug() << "Key";
-                    break;
-                }
-            }
+        case RIM_TYPEMOUSE:
+        default:
             break;
         }
-        break;
     }
 }
 
@@ -64,11 +56,9 @@ void HandleDevice::handleIt(RAWINPUT *raw)
     UINT size = 256;
     TCHAR tBuffer[256] = {0};
 
+    // Error in reading device name
     if(GetRawInputDeviceInfo(raw->header.hDevice, RIDI_DEVICENAME, tBuffer, &size) < 0)
-    {
-        // Error in reading device name
         return;
-    }
 
     int VendorID;
     int ProductID;
@@ -87,10 +77,11 @@ void HandleDevice::handleIt(RAWINPUT *raw)
 
         VID.toLower();
         VendorID = 0;
-        if(VID.startsWith("0x")){
-            VendorID = VID.mid(2).toInt(0,16);}
-        else{
-            VendorID = VID.toInt();}
+
+        if(VID.startsWith("0x"))
+            VendorID = VID.mid(2).toInt(0,16);
+        else
+            VendorID = VID.toInt();
 
         index = myString.toLower().indexOf("pid");
         QString PID = "0000";
@@ -103,10 +94,11 @@ void HandleDevice::handleIt(RAWINPUT *raw)
 
         PID.toLower();
         ProductID = 0;
-        if(PID.startsWith("0x")){
-            ProductID = PID.mid(2).toInt(0,16);}
-        else{
-            ProductID = PID.toInt();}
+
+        if(PID.startsWith("0x"))
+            ProductID = PID.mid(2).toInt(0,16);
+        else
+            ProductID = PID.toInt();
     }
 
     unsigned long long keyValue;
@@ -119,14 +111,19 @@ void HandleDevice::handleIt(RAWINPUT *raw)
     case RIM_TYPEHID:
         keyValue = *reinterpret_cast<unsigned long long *>(&raw->data.hid.bRawData);
         break;
-    case RIM_TYPEMOUSE:
-        break;
+
     case RIM_TYPEKEYBOARD:
         keyValue = raw->data.keyboard.VKey;
         break;
+
+    case RIM_TYPEMOUSE:
+    default:
+        break;
     }
+
     QString message;
     int i = 0;
+
     while(i < UsableControllers::getList().size())
     {
         if(UsableControllers::getList()[i].getVendorID() == VendorID && UsableControllers::getList()[i].getProductID() == ProductID)
@@ -136,18 +133,19 @@ void HandleDevice::handleIt(RAWINPUT *raw)
             message += nrContr;
 
             int k = 0;
-            while(k<UsableControllers::getList()[i].getSensorXYList().size()){
+            while(k<UsableControllers::getList()[i].getSensorXYList().size())
+            {
                 QString nr;
                 nr = nr.setNum(k);
                 bool pressed = true;
+
                 switch (raw->header.dwType)
                 {
                 case RIM_TYPEHID:
                     // value after using bitmask
                     value = keyValue; //UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask() &
                     break;
-                case RIM_TYPEMOUSE:
-                    break;
+
                 case RIM_TYPEKEYBOARD:
                     value = raw->data.keyboard.VKey;
 
@@ -156,16 +154,21 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                         pressed = false;
                     }
                     break;
-                }
-                qDebug() << "Keyboard" << value;
-                if(!pressed){
-                    return;
+
+                case RIM_TYPEMOUSE:
+                default:
+                    break;
                 }
 
+                //qDebug() << "Keyboard" << value;
+                if(!pressed)
+                    return;
+
                 //test if we have axis or buttons
-                if(UsableControllers::getList()[i].getSensorXYList()[k].getFixed()){
+                if(UsableControllers::getList()[i].getSensorXYList()[k].getFixed())
+                {
                     //fixed buttons
-                    qDebug() << "fixed";
+                    //qDebug() << "fixed";
 
 
                     unsigned int up = UsableControllers::getList()[i].getSensorXYList()[k].getUp();
@@ -178,13 +181,13 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                     unsigned int downRight;
 
                     mask3 = UsableControllers::getList()[i].getSensorXYList()[k].getGeneralXYMask();
-                    qDebug() << mask3;
+                    //qDebug() << mask3;
                     value3 = value & mask3;
 
-                    qDebug() << up << value << value3;
-                    qDebug() << down;
-                    qDebug() << left;
-                    qDebug() << right;
+                    //qDebug() << up << value << value3;
+                    //qDebug() << down;
+                    //qDebug() << left;
+                    //qDebug() << right;
 
                     if(UsableControllers::getList()[i].getSensorXYList()[k].getNumberOfButtons() == 4 && raw->header.dwType == RIM_TYPEHID)
                     {
@@ -200,10 +203,10 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                         downLeft = UsableControllers::getList()[i].getSensorXYList()[k].getDownLeft();
                         downRight = UsableControllers::getList()[i].getSensorXYList()[k].getDownRight();
                     }
-                    qDebug() << up << value << value3;
-                    qDebug() << down;
-                    qDebug() << left;
-                    qDebug() << right;
+                    //qDebug() << up << value << value3;
+                    //qDebug() << down;
+                    //qDebug() << left;
+                    //qDebug() << right;
 
                     if(up == value3){message += " Up" + nr;}
                     if(down == value3){message += " Down" + nr;}
@@ -214,13 +217,14 @@ void HandleDevice::handleIt(RAWINPUT *raw)
                     if(downLeft == value3){message += " Down" + nr + " Left" + nr;}
                     if(downRight == value3){message += " Down" + nr + " Right" + nr;}
                 }
-                else{
-                //XY-axis, because XY was not fixed
+                else
+                {
+                    //XY-axis, because XY was not fixed
                     //X-axis
                     signed long long valueX = UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask() & value;
                     qDebug("%x %x %x \n", valueX , value , UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask());
                     valueX /= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getMask()/0xff);
-                    qDebug() << valueX;
+                    //qDebug() << valueX;
                     if(valueX > UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()){
                         valueX -= (UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStop()-UsableControllers::getList()[i].getSensorXYList()[k].getXAxis().getRangeStart() + 1);
                     }
@@ -271,7 +275,9 @@ void HandleDevice::handleIt(RAWINPUT *raw)
         }
         i++;
     }
-    if(message != ""){
+
+    if(message != "")
+    {
         qDebug() << message;
         emit buttonAction(message);
     }

@@ -3,10 +3,9 @@
 #include <QString>
 #include <QTextStream>
 
-Button::Button(QString initialName, int maskPressed, int maskRelease)
+Button::Button(QString initialName, int maskPressed)
 {
         name = initialName;
-        bitMaskRelease = maskRelease;
         bitMaskPressed = maskPressed;
 }
 

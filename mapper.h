@@ -26,6 +26,10 @@ public:
     static bool tryUndoKeyMap(const QString target);
     static bool tryAxisMapToKey(const QString axisName, const int range, const QString target);
     static bool tryAxisFormatMap(const QString axisName, const int ranges, const int start, const int end, const bool inverted);
+    static QByteArray printAxisFormatMap();
+    static QByteArray printAxisMapToKey();
+    static QByteArray printKeyMap();
+
 
 signals:
     void actionHappened(QString button);

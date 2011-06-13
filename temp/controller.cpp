@@ -2,15 +2,11 @@
 
 Controller::Controller(QString initDescription,
                        int initVendorID,
-                       int initProductID,
-                       QString initProtocol,
-                       int initSampleRate)
+                       int initProductID)
 {
     description = initDescription;
     vendorID = initVendorID;
     productID = initProductID;
-    protocol = initProtocol;
-    sampleRate = initSampleRate;
 }
 
 void Controller::addButton(Button newButton)
@@ -88,8 +84,6 @@ QByteArray Controller::printAllDetails()
     outStream << "Type:\t\t"   << type;
     outStream << "VendorID:\t" << QString::number(vendorID, 16);
     outStream << "ProductID:\t" << QString::number(productID, 16);
-    outStream << "Protocol:\t"   << protocol;
-    outStream << "Sample rate:\t"   << sampleRate;
     outStream << printXYList();
     outStream << printButtonList();
     outStream << "\n**********************************************";

@@ -34,12 +34,25 @@ UDPServer::~UDPServer()
 
 void UDPServer::startSocket()
 {
-    // Bind to ip and port
+    // Bind to IP and port
+    int port = 50000;
+    ownNode->setPort(port);
+    udpSocket->bind(QHostAddress(ownNode->address()), ownNode->port());
+    qDebug() << "Trying to bind this address: " << ownNode->address() << ":" << ownNode->port();
 
-    qDebug() << "UDPClient binded, trying to start";
+    // Bind other Node port to 50001
+    port = 50001;
+    otherNode->setPort(port);
 
-    startServer();
-    emit connected(true);
+    qDebug() << "UDPServer binded, trying to start";
+
+    // Make connection to read incomming messages
+    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
+    // Make connection with aliveTimer to call nodeLost
+    connect(aliveTimer, SIGNAL(timeout()), this, SLOT(nodeLost()));
+    qDebug() << "Socket connected!";
+
+    emit isConnected(true);
 }
 
 void UDPServer::sendControllerAction(const QString action)
@@ -132,6 +145,74 @@ void UDPServer::handleDataRequest(QString data)
  *
  */
 
+void UDPServer::processDatagram(const QByteArray &datagram)
+{
+    QString datastring(datagram);
+    switch (datastring.section(';',0,0).toInt())
+    {
+    case 1:
+        // set the correct IP to send to
+        otherNode->setAddress(datastring.section(';',1,1));
+        qDebug() << "otherNode adress set to: " << datastring.section(';',1,1);
+
+        // reply to SYN msg
+        sendSYNACK();
+
+        qDebug() << "processed Datagram case 1";
+        break;
+    case 3:
+        // reply to ACK msg
+        stopTimeOutTimer();
+        sendAME();
+
+        qDebug() << "processed Datagram case 3: Handshake complete";
+        break;
+    case 5:
+        // intern reply to the 'alive' msg of the client
+        if (!connected)
+            setConnected(true);
+
+        resetAliveTimer();
+
+        qDebug() << "processed Datagram case 5";
+        break;
+    case 11:
+        // incomming request for data from server
+        handleDataRequest(datagram);
+
+        qDebug() << "processed Datagram case 11";
+        break;
+    default:
+        // Just break on everything else
+        break;
+    }
+}
+
+void UDPServer::sendSYNACK()
+{
+    QString address = otherNodeAddress();
+    quint16 port = udpSocket->localPort();
+    QByteArray datagram = "2;" + address.toLatin1() + ";" +  QByteArray::number(port);
+
+    startTimeOutTimer();
+    sendDatagram(datagram);
+
+    qDebug() << "SYN-ACK Message sent";
+}
+
+// AME = Alive Message Expected
+void UDPServer::sendAME()
+{
+    QString address = udpSocket->localAddress().toString();
+    quint16 port = udpSocket->localPort();
+    QByteArray datagram = "4;" + address.toLatin1() + ";" +  QByteArray::number(port);
+
+    startAliveTimer();
+    sendDatagram(datagram);
+
+    qDebug() << "AME Message sent";
+}
+
 void UDPServer::sendHelp()
 {
     QString hlp = "10;";
@@ -142,9 +223,9 @@ void UDPServer::sendHelp()
     hlp += "DSDVC\tDeselects a certain device\n";
     hlp += "LSBTS\tGenerates a list of all usable buttons on the selected device\n";
     hlp += "KMAP\tBinds button to certain String\n";
-    hlp += "UMAP\tUndo a bind of a certain button";
-    hlp += "SUPDVS\tGenerates a numberd list of all supported devices (with extra parameters b, p and v if needed)";
-    hlp += "AFMAP\tMap a certain format to an axis ((String)axisName (int)ranges (int)start (int)end (bool)inverted)";
+    hlp += "UMAP\tUndo a bind of a certain button\n";
+    hlp += "SUPDVS\tGenerates a numberd list of all supported devices (with extra parameters b, p and v if needed)\n";
+    hlp += "AFMAP\tMap a certain format to an axis ((String)axisName (int)ranges (int)start (int)end (bool)inverted)\n";
     hlp += "AKMAP\tMap an axis to a certain String ((String)axisName (int)range (String)target)";
 
     sendDatagram(hlp.toLatin1());
@@ -153,7 +234,10 @@ void UDPServer::sendHelp()
 void UDPServer::sendDeviceList()
 {
     QString dvcs = "10;";
-    dvcs += QString(UsableControllers::printAllShortList());
+    if(UsableControllers::printAllShortList().isEmpty())
+        dvcs += "No usable controllers connected!";
+    else
+        dvcs += QString(UsableControllers::printAllShortList());
     sendDatagram(dvcs.toLatin1());
 }
 

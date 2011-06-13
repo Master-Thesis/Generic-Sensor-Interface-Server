@@ -22,61 +22,37 @@ public:
     bool isConnected() const;
 
 signals:
-    // Both
     void started();
     void dataSent(QByteArray);
     void destAddressInvalid();
     void connectionEstablished();
     void connectionLost();
     void connectionChanged(bool);
-    // Server Specific
-    void dataRequestReceived(QString);
-    // Client Specific
-    void dataReplyReceived(QString);
-    void controllerAction(QString);
 
 public slots:
-    // Both
     virtual void startSocket() = 0;
     void setAddress(const QString ip);
     void setPort(const int portNo);
     void setOtherNodeAddress(const QString ip);
     void setOtherNodePort(const int portNo);
-    // Server specific
-    // Client specific
 
 protected slots:
-    // Both
     void processPendingDatagrams();
     void nodeLost();
     void noResponse();
-    // Server Specific
-    void startServer();
-    // Client Specific
-    void startClient();
-    void sendAliveMsg();
 
 protected:
-    // Both
+    bool connected;
+
     void setConnected(const bool connectionBool);
-    void processDatagram(const QByteArray &datagram);
+    virtual void processDatagram(const QByteArray &datagram);
     void sendDatagram(const QByteArray &message);
     void startTimeOutTimer();
     void stopTimeOutTimer();
     QString findIpAddress() const;
-    // Server Specific
-    void sendSYNACK();
-    void sendAME();
     void startAliveTimer();
     void resetAliveTimer();
     void stopAliveTimer();
-    virtual void handleDataRequest(const QString datagram);
-    // Client Specific
-    void sendSYN();
-    void sendACK();
-    void startAliveMsg();
-    void handleControllerAction(const QString datagram);
-    virtual void handleDataReply(const QString datagram);
 
     // Used structures
     QUdpSocket *udpSocket;
@@ -85,7 +61,6 @@ protected:
     Node *otherNode;
 
 private:
-    bool connected;
     QTimer *timeOutTimer;
 
     // Alive Message Time Out: server constant
